@@ -1,0 +1,23 @@
+site_name: OpenSSL Manpages
+site_url: https://man.openssl.org/
+nav:
+  - Home: index.md
+extra:
+  version:
+    provider: mike
+    default: master
+theme:
+  name: material
+  palette: 
+    - scheme: default
+      toggle:
+        icon: material/brightness-7 
+        name: Switch to dark mode
+    - scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.path
+    - navigation.tracking
