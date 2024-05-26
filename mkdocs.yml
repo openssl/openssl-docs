@@ -1,11 +1,12 @@
-site_name: OpenSSL Manpages
-site_url: https://man.openssl.org/
-nav:
-  - Home: index.md
+site_name: OpenSSL Documentation
+site_url: https://docs.openssl.org/
+not_in_nav: |
+  /internal/*
 extra:
   version:
     provider: mike
     default: master
+    alias: true
 theme:
   name: material
   palette: 
@@ -18,6 +19,17 @@ theme:
         icon: material/brightness-4
         name: Switch to light mode
   features:
-    - navigation.tabs
+    - navigation.instant
     - navigation.path
+    - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.tracking
+    - search.suggest
+    - toc.follow
+markdown_extensions:
+  - toc:
+      permalink: true
+  - pymdownx.highlight
+  - pymdownx.superfences
+hooks:
+  - hook.py
