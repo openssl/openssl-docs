@@ -2,6 +2,8 @@
 hide:
   - navigation
   - toc
+search:
+  exclude: true
 ---
 
 # OpenSSL commands
