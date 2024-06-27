@@ -4,12 +4,18 @@ from marko.block import Heading
 from mkdocs.structure.files import Files
 from mkdocs.config.defaults import MkDocsConfig
 from mkdocs import plugins
-import os
 import pathlib
 import shutil
 
 CURRENT_DIR = pathlib.Path(__file__).parent
 SKIP_FILES = ["index.md", "fips.md", "man1/index.md", "man3/index.md", "man5/index.md", "man7/index.md"]
+SEARCH_EXCLUSION = (
+"""---
+search:
+  exclude: true
+---\n
+"""
+)
 
 commands_index = CURRENT_DIR / "docs" / "man1" / "index.md"
 libraries_index = CURRENT_DIR / "docs" / "man3" / "index.md"
@@ -57,9 +63,11 @@ def create_aliases(files: Files, config: MkDocsConfig):
             name = name.strip().replace("/", "-")
             if name == man_page.name or not name:
                 continue
-            symlink_path = CURRENT_DIR / "docs" / man_dir / f"{name}.md"
-            os.symlink(man_page.abs_src_path, symlink_path)
-            alias_file = man_page.generated(config, f"{man_dir}/{name}.md", abs_src_path=symlink_path)
+            alias_path = CURRENT_DIR / "docs" / man_dir / f"{name}.md"
+            with open(alias_path, "w") as alias_fd:
+                alias_fd.write(SEARCH_EXCLUSION)
+                alias_fd.write(man_page.content_string)
+            alias_file = man_page.generated(config, f"{man_dir}/{name}.md", abs_src_path=alias_path)
             files.append(alias_file)
     return files
 
