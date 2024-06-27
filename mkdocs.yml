@@ -1,7 +1,8 @@
 site_name: OpenSSL Documentation
-site_url: https://docs.openssl.org/
+site_url: http://localhost:8000/
+repo_url: https://github.com/openssl/openssl
 not_in_nav: |
-  /internal/*
+  /*/internal/*
 extra:
   version:
     provider: mike
@@ -19,6 +20,7 @@ theme:
         icon: material/brightness-4
         name: Switch to light mode
   features:
+    - navigation.indexes
     - navigation.instant
     - navigation.path
     - navigation.tabs
@@ -31,5 +33,8 @@ markdown_extensions:
       permalink: true
   - pymdownx.highlight
   - pymdownx.superfences
+  - tables
 hooks:
-  - hook.py
+  - hooks.py
+validation:
+  unrecognized_links: ignore
