@@ -4,11 +4,9 @@ from marko.block import Heading
 from mkdocs.structure.files import Files
 from mkdocs.config.defaults import MkDocsConfig
 from mkdocs import plugins
-import tempfile
 import os
 import pathlib
 import shutil
-import subprocess
 
 CURRENT_DIR = pathlib.Path(__file__).parent
 SKIP_FILES = ["index.md", "fips.md", "man1/index.md", "man3/index.md", "man5/index.md", "man7/index.md"]
@@ -44,10 +42,7 @@ def get_description(content: str) -> str:
 
 
 def on_pre_build(config: MkDocsConfig):
-    shutil.copy(CURRENT_DIR / "index_templates" / "man1.md", commands_index)
-    shutil.copy(CURRENT_DIR / "index_templates" / "man3.md", libraries_index)
-    shutil.copy(CURRENT_DIR / "index_templates" / "man5.md", formats_index)
-    shutil.copy(CURRENT_DIR / "index_templates" / "man7.md", overview_index)
+    shutil.copytree(CURRENT_DIR / "scaffold", CURRENT_DIR / "docs", dirs_exist_ok=True)
 
 
 @plugins.event_priority(10)

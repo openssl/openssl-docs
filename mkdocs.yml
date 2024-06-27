@@ -7,7 +7,6 @@ extra:
   version:
     provider: mike
     default: master
-    alias: true
 theme:
   name: material
   palette: 

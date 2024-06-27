@@ -6,6 +6,17 @@ import tempfile
 from pathlib import Path
 
 
+VERSION_MAP = {
+    "master": "master",
+    "3.3": "openssl-3.3",
+    "3.2": "openssl-3.2",
+    "3.1": "openssl-3.1",
+    "3.0": "openssl-3.0",
+    "1.1.1": "OpenSSL_1_1_1-stable",
+    "1.0.2": "OpenSSL_1_0_2-stable",
+}
+
+
 def clone(branch: str, tmp_dir: str) -> None:
     subprocess.run([
         "git",
@@ -20,6 +31,13 @@ def clone(branch: str, tmp_dir: str) -> None:
     ])
 
 
+def build_manpages(tmp_dir: str):
+    if return_code := subprocess.run(["perl", "Configure"], cwd=tmp_dir).returncode != 0:
+        raise SystemExit(return_code)
+    if return_code := subprocess.run(["make", "build_man_docs"], cwd=tmp_dir).returncode != 0:
+        raise SystemExit(return_code)
+
+
 def clean_docs():
     shutil.rmtree("docs/")
 
@@ -32,23 +50,26 @@ def create_dirs():
 
 
 def convert_pod_to_md(tmp_dir: str):
-    for pod in Path(f"{tmp_dir}/docs").glob("**/*.pod"):
+    for pod in Path(f"{tmp_dir}/doc").glob("**/*.pod"):
         target = f"docs/{pod.parts[-2]}/{pod.stem}.md"
-        subprocess.run([
-            "pod2markdown",
-            '--man-url-prefix "../../man"',
-            str(pod),
-            target
-        ])
+        ps = subprocess.run(["pod2markdown", "--man-url-prefix", "../../man", str(pod), target])
+        if ps.returncode != 0:
+            raise SystemExit(ps.returncode)
+
+
+def build_site(version: str):
+    return subprocess.run(["mike", "deploy", version]).returncode
 
 
 def main():
-    branch = sys.argv[1]
+    version = sys.argv[1]
+    clean_docs()
+    create_dirs()
     with tempfile.TemporaryDirectory() as tmp_dir:
-        clone(branch, tmp_dir)
-        clean_docs()
-        create_dirs()
+        clone(VERSION_MAP[version], tmp_dir)
+        build_manpages(tmp_dir)
         convert_pod_to_md(tmp_dir)
+    return build_site(version)
 
 
 if __name__ == "__main__":
