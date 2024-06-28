@@ -3,11 +3,11 @@ from marko.md_renderer import MarkdownRenderer
 from marko.block import Heading
 from mkdocs.structure.files import Files
 from mkdocs.structure.nav import Link
+from mkdocs.structure.nav import Navigation
+from mkdocs.structure.pages import Page
 from mkdocs.config.defaults import MkDocsConfig
-import pathlib
 import shutil
 
-CURRENT_DIR = pathlib.Path(__file__).parent
 MAN_INDEXES = ["man1/index.md", "man3/index.md", "man5/index.md", "man7/index.md"]
 SKIP_FILES = ["index.md", "fips.md"]
 
@@ -26,9 +26,10 @@ def get_names_paragraph(content: str) -> str:
     return " ".join(paragraph_lines)
         
 
-def get_names(content: str) -> str:
+def get_names(content: str) -> list[str]:
     names_paragraph = get_names_paragraph(content)
-    return names_paragraph.replace("\\", "").strip().replace("\n", " ").split(" - ")[0].strip().split(",")
+    names = names_paragraph.replace("\\", "").strip().replace("\n", " ").split(" - ")[0].strip().split(",")
+    return [name for name in names if name.strip()]
 
 
 def get_description(content: str) -> str:
@@ -36,11 +37,11 @@ def get_description(content: str) -> str:
     return names_paragraph.replace("\\", "").strip().replace("\n", " ").split(" - ")[1].strip()
 
 
-def on_pre_build(config: MkDocsConfig):
-    shutil.copytree(CURRENT_DIR / "scaffold", CURRENT_DIR / "docs", dirs_exist_ok=True)
+def on_pre_build(config: MkDocsConfig) -> None:
+    shutil.copytree("scaffold", "docs", dirs_exist_ok=True)
 
 
-def populate_index_content(source_md, page, files: Files):
+def populate_index_content(source_md: str, page: Page, files: Files) -> str:
     current_man_dir = page.parent.title.lower()
     rows = []
     for man_file in files.documentation_pages():
@@ -59,7 +60,7 @@ def populate_index_content(source_md, page, files: Files):
     return source_md + "\n".join(sorted(rows))
 
 
-def fix_headings(source_md, page):
+def fix_headings(source_md: str, page: Page) -> str:
     parser = marko.Markdown(renderer=MarkdownRenderer)
     new_children = []
     h1_parsed = parser.parse(f"# {page.file.name}")
@@ -77,7 +78,7 @@ def fix_headings(source_md, page):
     return parser.render(parsed)
 
 
-def on_page_markdown(source_md, page, config: MkDocsConfig, files: Files):
+def on_page_markdown(source_md: str, page: Page, config: MkDocsConfig, files: Files) -> str:
     if page.file.src_uri in SKIP_FILES:
         return source_md
     if page.file.src_uri in MAN_INDEXES:
@@ -100,14 +101,14 @@ def populate_nav(files: Files) -> dict[str, list[Link]]:
         for name in names:
             # e.g. "openssl/core_dispatch.h" to "openssl-core_dispatch.h"
             name = name.strip().replace("/", "-")
-            if name == man_file.name or not name:
+            if name == man_file.name:
                 continue
             link = Link(title=name, url=f"{man_dir}/{man_file.name}")
             navigation_children[man_dir].append(link)
     return navigation_children
 
 
-def on_nav(nav, config: MkDocsConfig, files: Files):
+def on_nav(nav: Navigation, config: MkDocsConfig, files: Files) -> Navigation:
     nav_map = {
         "index": "Home",
         "fips": "FIPS-140",
