@@ -1,12 +1,14 @@
+import shutil
+
 import marko
-from marko.md_renderer import MarkdownRenderer
 from marko.block import Heading
+from marko.md_renderer import MarkdownRenderer
+from mkdocs import plugins
+from mkdocs.config.defaults import MkDocsConfig
 from mkdocs.structure.files import Files
 from mkdocs.structure.nav import Link
 from mkdocs.structure.nav import Navigation
 from mkdocs.structure.pages import Page
-from mkdocs.config.defaults import MkDocsConfig
-import shutil
 
 MAN_INDEXES = ["man1/index.md", "man3/index.md", "man5/index.md", "man7/index.md"]
 SKIP_FILES = ["index.md", "fips.md"]
@@ -24,7 +26,7 @@ def get_names_paragraph(content: str) -> str:
         if append:
             paragraph_lines.append(line)
     return " ".join(paragraph_lines)
-        
+
 
 def get_names(content: str) -> list[str]:
     names_paragraph = get_names_paragraph(content)
@@ -41,7 +43,9 @@ def on_pre_build(config: MkDocsConfig) -> None:
     shutil.copytree("scaffold", "docs", dirs_exist_ok=True)
 
 
-def populate_index_content(source_md: str, page: Page, files: Files) -> str:
+def populate_index_content(source_md: str, page: Page, config: MkDocsConfig, files: Files) -> str:
+    if page.file.src_uri not in MAN_INDEXES:
+        return source_md
     current_man_dir = page.parent.title.lower()
     rows = []
     for man_file in files.documentation_pages():
@@ -60,7 +64,9 @@ def populate_index_content(source_md: str, page: Page, files: Files) -> str:
     return source_md + "\n".join(sorted(rows))
 
 
-def fix_headings(source_md: str, page: Page) -> str:
+def fix_headings(source_md: str, page: Page, config: MkDocsConfig, files: Files) -> str:
+    if page.file.src_uri in SKIP_FILES + MAN_INDEXES:
+        return source_md
     parser = marko.Markdown(renderer=MarkdownRenderer)
     new_children = []
     h1_parsed = parser.parse(f"# {page.file.name}")
@@ -78,12 +84,13 @@ def fix_headings(source_md: str, page: Page) -> str:
     return parser.render(parsed)
 
 
-def on_page_markdown(source_md: str, page: Page, config: MkDocsConfig, files: Files) -> str:
-    if page.file.src_uri in SKIP_FILES:
+def fix_img_links(source_md: str, page: Page, config: MkDocsConfig, files: Files) -> str:
+    if not page.file.name.startswith("life_cycle-"):
         return source_md
-    if page.file.src_uri in MAN_INDEXES:
-        return populate_index_content(source_md, page, files)
-    return fix_headings(source_md, page)
+    return source_md.replace('<img src="', '<img src="../')
+
+
+on_page_markdown = plugins.CombinedEvent(fix_headings, fix_img_links, populate_index_content)
 
 
 def populate_nav(files: Files) -> dict[str, list[Link]]:
@@ -115,7 +122,7 @@ def on_nav(nav: Navigation, config: MkDocsConfig, files: Files) -> Navigation:
         "man1": "Commands",
         "man3": "Libraries",
         "man5": "File Formats",
-        "man7": "Overviews"
+        "man7": "Overviews",
     }
     nav_children = populate_nav(files)
     for item in nav.items:

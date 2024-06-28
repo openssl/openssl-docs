@@ -18,23 +18,18 @@ VERSION_MAP = {
 
 
 def clone(branch: str, tmp_dir: str) -> None:
-    subprocess.run([
-        "git",
-        "clone",
-        "--single-branch",
-        "-b",
-        branch,
-        "--depth",
-        "1",
-        "https://github.com/openssl/openssl",
-        tmp_dir
-    ])
+    subprocess.run(
+        ["git", "clone", "--single-branch", "-b", branch, "--depth", "1", "https://github.com/openssl/openssl", tmp_dir]
+    )
 
 
 def build_manpages(tmp_dir: str):
     if return_code := subprocess.run(["sh", "config"], cwd=tmp_dir).returncode != 0:
         raise SystemExit(return_code)
-    if return_code := subprocess.run(["make", "-j", str(os.cpu_count()), "build_man_docs"], cwd=tmp_dir).returncode != 0:
+    if (
+        return_code := subprocess.run(["make", "-j", str(os.cpu_count()), "build_man_docs"], cwd=tmp_dir).returncode
+        != 0
+    ):
         raise SystemExit(return_code)
 
 
