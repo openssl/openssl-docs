@@ -70,7 +70,7 @@ def convert_pod_to_md(tmp_dir: str):
 
 
 def copy_images(tmp_dir: str):
-    shutil.copytree(f"{tmp_dir}/doc/man7/img", "docs/man7", dirs_exist_ok=True)
+    shutil.copytree(f"{tmp_dir}/doc/man7/img", "docs/man7/img")
 
 
 def build_site(version: str):
