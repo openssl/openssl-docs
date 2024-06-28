@@ -1,0 +1,4 @@
+.md-ellipsis-custom {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
