@@ -69,6 +69,10 @@ def convert_pod_to_md(tmp_dir: str):
             raise SystemExit(ps.returncode)
 
 
+def copy_images(tmp_dir: str):
+    shutil.copytree(f"{tmp_dir}/doc/man7/img", "docs/man7", dirs_exist_ok=True)
+
+
 def build_site(version: str):
     return subprocess.run(["mike", "deploy", version, "--ignore-remote-status"]).returncode
 
@@ -82,6 +86,8 @@ def main():
         if version not in ["1.0.2", "1.1.1"]:
             build_manpages(tmp_dir)
         convert_pod_to_md(tmp_dir)
+        if version not in ["1.0.2", "1.1.1"]:
+            copy_images(tmp_dir)
     return build_site(version)
 
 
