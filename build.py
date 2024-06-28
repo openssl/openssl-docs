@@ -50,8 +50,20 @@ def create_dirs():
 
 
 def convert_pod_to_md(tmp_dir: str):
-    for pod in Path(f"{tmp_dir}/doc").glob("man*/*.pod"):
-        target = f"docs/{pod.parts[-2]}/{pod.stem}.md"
+    # for openssl 1.0.2
+    dir_map = {
+        "apps": "man1",
+        "crypto": "man3",
+        "ssl": "man7",
+        "man1": "man1",
+        "man3": "man3",
+        "man5": "man5",
+        "man7": "man7",
+    }
+    for pod in Path(f"{tmp_dir}/doc").glob("**/*.pod"):
+        if "internal" in pod.parent.parts:
+            continue
+        target = f"docs/{dir_map[pod.parent.name]}/{pod.stem}.md"
         ps = subprocess.run(["pod2markdown", "--man-url-prefix", "../../man", str(pod), target])
         if ps.returncode != 0:
             raise SystemExit(ps.returncode)
