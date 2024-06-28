@@ -1,8 +1,6 @@
 site_name: OpenSSL Documentation
-site_url: https://quarckster.github.io/openssl-docs/
+site_url: https://docs.openssl.org/
 repo_url: https://github.com/openssl/openssl
-not_in_nav: |
-  /*/internal/*
 extra:
   version:
     provider: mike
