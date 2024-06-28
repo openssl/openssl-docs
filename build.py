@@ -58,7 +58,7 @@ def convert_pod_to_md(tmp_dir: str):
 
 
 def build_site(version: str):
-    return subprocess.run(["mike", "deploy", version]).returncode
+    return subprocess.run(["mike", "deploy", version, "--ignore-remote-status"]).returncode
 
 
 def main():
