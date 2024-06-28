@@ -32,7 +32,7 @@ def clone(branch: str, tmp_dir: str) -> None:
 
 
 def build_manpages(tmp_dir: str):
-    if return_code := subprocess.run(["perl", "Configure"], cwd=tmp_dir).returncode != 0:
+    if return_code := subprocess.run(["sh", "config"], cwd=tmp_dir).returncode != 0:
         raise SystemExit(return_code)
     if return_code := subprocess.run(["make", "-j", str(os.cpu_count()), "build_man_docs"], cwd=tmp_dir).returncode != 0:
         raise SystemExit(return_code)
@@ -50,7 +50,7 @@ def create_dirs():
 
 
 def convert_pod_to_md(tmp_dir: str):
-    for pod in Path(f"{tmp_dir}/doc").glob("**/*.pod"):
+    for pod in Path(f"{tmp_dir}/doc").glob("man*/*.pod"):
         target = f"docs/{pod.parts[-2]}/{pod.stem}.md"
         ps = subprocess.run(["pod2markdown", "--man-url-prefix", "../../man", str(pod), target])
         if ps.returncode != 0:
