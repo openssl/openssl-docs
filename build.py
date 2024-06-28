@@ -34,7 +34,7 @@ def clone(branch: str, tmp_dir: str) -> None:
 def build_manpages(tmp_dir: str):
     if return_code := subprocess.run(["perl", "Configure"], cwd=tmp_dir).returncode != 0:
         raise SystemExit(return_code)
-    if return_code := subprocess.run(["make", "build_man_docs"], cwd=tmp_dir).returncode != 0:
+    if return_code := subprocess.run(["make", "-j", str(os.cpu_count()), "build_man_docs"], cwd=tmp_dir).returncode != 0:
         raise SystemExit(return_code)
 
 
@@ -67,7 +67,8 @@ def main():
     create_dirs()
     with tempfile.TemporaryDirectory() as tmp_dir:
         clone(VERSION_MAP[version], tmp_dir)
-        build_manpages(tmp_dir)
+        if version not in ["1.0.2", "1.1.1"]:
+            build_manpages(tmp_dir)
         convert_pod_to_md(tmp_dir)
     return build_site(version)
 
