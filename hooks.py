@@ -102,7 +102,7 @@ def populate_nav(files: Files) -> dict[str, list[Link]]:
             name = name.strip().replace("/", "-")
             if name == man_file.name or not name:
                 continue
-            link = Link(title=name, url=f"/{man_dir}/{man_file.name}")
+            link = Link(title=name, url=f"{man_dir}/{man_file.name}")
             navigation_children[man_dir].append(link)
     return navigation_children
 
@@ -111,16 +111,16 @@ def on_nav(nav, config: MkDocsConfig, files: Files):
     nav_map = {
         "index": "Home",
         "fips": "FIPS-140",
-        "Man1": "Commands",
-        "Man3": "Libraries",
-        "Man5": "File Formats",
-        "Man7": "Overviews"
+        "man1": "Commands",
+        "man3": "Libraries",
+        "man5": "File Formats",
+        "man7": "Overviews"
     }
     nav_children = populate_nav(files)
     for item in nav.items:
         if item.is_section:
-            man_dir = item.title
-            sorted_children = item.children[1:] + nav_children[man_dir.lower()]
+            man_dir = item.title.lower()
+            sorted_children = item.children[1:] + nav_children[man_dir]
             sorted_children = sorted(sorted_children, key=lambda item: item.title or item.file.name)
             item.children = [item.children[0], *sorted_children]
             item.title = nav_map[man_dir]

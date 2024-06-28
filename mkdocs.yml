@@ -12,12 +12,14 @@ theme:
   name: material
   palette: 
     - scheme: default
-      primary: custom
+      primary: blue grey
+      accent: light blue
       toggle:
         icon: material/brightness-7 
         name: Switch to dark mode
     - scheme: slate
-      primary: custom
+      primary: black
+      accent: light blue
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
@@ -40,5 +42,3 @@ hooks:
   - hooks.py
 validation:
   unrecognized_links: ignore
-extra_css:
-  - stylesheets/extra.css
