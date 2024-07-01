@@ -5,9 +5,12 @@ extra:
   version:
     provider: mike
     default: master
+extra_css:
+  - stylesheets/extra.css
 theme:
   favicon: images/favicon.ico
   name: material
+  custom_dir: overrides
   palette: 
     - scheme: default
       primary: blue grey
@@ -25,6 +28,7 @@ theme:
     - navigation.indexes
     - navigation.instant
     - navigation.path
+    - navigation.prune
     - navigation.tabs
     - navigation.tabs.sticky
     - navigation.tracking
