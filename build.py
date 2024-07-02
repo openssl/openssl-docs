@@ -26,10 +26,8 @@ def clone(branch: str, tmp_dir: str) -> None:
 def build_manpages(tmp_dir: str):
     if return_code := subprocess.run(["sh", "config"], cwd=tmp_dir).returncode != 0:
         raise SystemExit(return_code)
-    if (
-        return_code := subprocess.run(["make", "-j", str(os.cpu_count()), "build_man_docs"], cwd=tmp_dir).returncode
-        != 0
-    ):
+    cmd = ["make", "-j", str(os.cpu_count()), "build_man_docs"]
+    if return_code := subprocess.run(cmd, cwd=tmp_dir).returncode != 0:
         raise SystemExit(return_code)
 
 
@@ -49,7 +47,7 @@ def convert_pod_to_md(tmp_dir: str):
     dir_map = {
         "apps": "man1",
         "crypto": "man3",
-        "ssl": "man7",
+        "ssl": "man3",
         "man1": "man1",
         "man3": "man3",
         "man5": "man5",

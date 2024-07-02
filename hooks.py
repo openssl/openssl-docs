@@ -4,7 +4,9 @@ from pathlib import Path
 import marko
 import minify_html
 from marko.block import Heading
+from marko.block import ListItem
 from marko.block import Paragraph
+from marko.helpers import MarkoExtension
 from marko.inline import Link as MarkdownLink
 from marko.md_renderer import MarkdownRenderer
 from mkdocs import plugins
@@ -17,6 +19,26 @@ from mkdocs.structure.pages import Page
 MAN_INDEXES = ["man1/index.md", "man3/index.md", "man5/index.md", "man7/index.md"]
 SKIP_FILES = ["index.md", "fips.md"]
 LINKS_MAP = {}
+
+
+class HackedListItem(ListItem):
+
+    override = True
+
+    @classmethod
+    def parse(cls, source) -> ListItem:
+        state = cls(source.context.list_item_info)
+        state.children = []
+        with source.under_state(state):
+            if not source.next_line().strip():
+                source.consume()
+                if not source.next_line() or not source.next_line().strip():
+                    return state
+            state.children = source.parser.parse_source(source)
+        return state
+
+
+HackExtension = MarkoExtension(elements=[HackedListItem])
 
 
 def get_names_paragraph(content: str) -> str:
@@ -102,7 +124,7 @@ def fix_heading(heading: Heading, parser: marko.Markdown) -> Heading:
 def fix_markdown(source_md: str, page: Page, config: MkDocsConfig, files: Files) -> str:
     if page.file.src_uri in SKIP_FILES + MAN_INDEXES:
         return source_md
-    parser = marko.Markdown(renderer=MarkdownRenderer)
+    parser = marko.Markdown(renderer=MarkdownRenderer, extensions=[HackExtension])
     new_children = []
     h1_parsed = parser.parse(f"# {page.file.name}")
     h1 = h1_parsed.children[0]
