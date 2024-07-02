@@ -1,7 +1,11 @@
 import shutil
+from pathlib import Path
 
 import marko
+import minify_html
 from marko.block import Heading
+from marko.block import Paragraph
+from marko.inline import Link as MarkdownLink
 from marko.md_renderer import MarkdownRenderer
 from mkdocs import plugins
 from mkdocs.config.defaults import MkDocsConfig
@@ -12,6 +16,7 @@ from mkdocs.structure.pages import Page
 
 MAN_INDEXES = ["man1/index.md", "man3/index.md", "man5/index.md", "man7/index.md"]
 SKIP_FILES = ["index.md", "fips.md"]
+LINKS_MAP = {}
 
 
 def get_names_paragraph(content: str) -> str:
@@ -43,6 +48,19 @@ def on_pre_build(config: MkDocsConfig) -> None:
     shutil.copytree("scaffold", "docs", dirs_exist_ok=True)
 
 
+def on_files(files: Files, config: MkDocsConfig) -> Files | None:
+    for man_file in files.documentation_pages():
+        if man_file.src_uri in SKIP_FILES + MAN_INDEXES:
+            continue
+        man_dir = Path(man_file.src_uri).parent
+        names = get_names(man_file.content_string)
+        for name in names:
+            # e.g. "openssl/core_dispatch.h" to "openssl-core_dispatch.h"
+            name = name.strip().replace("/", "-")
+            LINKS_MAP[f"../../{man_dir}/{name}"] = f"../{man_dir}/{man_file.name}.md"
+    return files
+
+
 def populate_index_content(source_md: str, page: Page, config: MkDocsConfig, files: Files) -> str:
     if page.file.src_uri not in MAN_INDEXES:
         return source_md
@@ -64,7 +82,24 @@ def populate_index_content(source_md: str, page: Page, config: MkDocsConfig, fil
     return source_md + "\n".join(sorted(rows))
 
 
-def fix_headings(source_md: str, page: Page, config: MkDocsConfig, files: Files) -> str:
+def fix_links(paragraph: Paragraph) -> Paragraph:
+    stack = [paragraph]
+    while stack:
+        current_child = stack.pop()
+        for child in current_child.children:
+            if isinstance(child, Paragraph):
+                stack.append(child)
+            if isinstance(child, MarkdownLink):
+                child.dest = LINKS_MAP.get(child.dest) or child.dest
+    return paragraph
+
+
+def fix_heading(heading: Heading, parser: marko.Markdown) -> Heading:
+    heading_text = f"#{parser.render(heading)}"
+    return parser.parse(heading_text)
+
+
+def fix_markdown(source_md: str, page: Page, config: MkDocsConfig, files: Files) -> str:
     if page.file.src_uri in SKIP_FILES + MAN_INDEXES:
         return source_md
     parser = marko.Markdown(renderer=MarkdownRenderer)
@@ -74,12 +109,11 @@ def fix_headings(source_md: str, page: Page, config: MkDocsConfig, files: Files)
     new_children.append(h1)
     parsed = parser.parse(source_md)
     for child in parsed.children:
-        if not isinstance(child, Heading):
-            new_children.append(child)
-            continue
-        heading_text = f"#{parser.render(child)}"
-        heading = parser.parse(heading_text)
-        new_children.append(heading)
+        if isinstance(child, Paragraph):
+            child = fix_links(child)
+        if isinstance(child, Heading):
+            child = fix_heading(child, parser)
+        new_children.append(child)
     parsed.children = new_children
     return parser.render(parsed)
 
@@ -90,7 +124,7 @@ def fix_img_links(source_md: str, page: Page, config: MkDocsConfig, files: Files
     return source_md.replace('<img src="', '<img src="../')
 
 
-on_page_markdown = plugins.CombinedEvent(fix_headings, fix_img_links, populate_index_content)
+on_page_markdown = plugins.CombinedEvent(fix_markdown, fix_img_links, populate_index_content)
 
 
 def populate_nav(files: Files) -> dict[str, list[Link]]:
@@ -135,3 +169,15 @@ def on_nav(nav: Navigation, config: MkDocsConfig, files: Files) -> Navigation:
         if item.is_page:
             item.title = nav_map[item.file.name]
     return nav
+
+
+def on_post_page(output: str, page: Page, config: MkDocsConfig):
+    return minify_html.minify(
+        output,
+        do_not_minify_doctype=True,
+        ensure_spec_compliant_unquoted_attribute_values=True,
+        keep_spaces_between_attributes=True,
+        minify_css=True,
+        minify_js=True,
+        remove_processing_instructions=True,
+    )
