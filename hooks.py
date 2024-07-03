@@ -91,19 +91,14 @@ def replace_heading(match: re.Match) -> str:
 def fix_markdown(source_md: str, page: Page, config: MkDocsConfig, files: Files) -> str:
     if page.file.src_uri in SKIP_FILES + MAN_INDEXES:
         return source_md
+    if page.file.name.startswith("life_cycle-"):
+        source_md = source_md.replace('<img src="', '<img src="../')
     source_md = LINKS_PATTERN.sub(replace_link, source_md)
     source_md = HEADINGS_PATTERN.sub(replace_heading, source_md)
     source_md = f"# {page.file.name}\n" + source_md
     return source_md
 
-
-def fix_img_links(source_md: str, page: Page, config: MkDocsConfig, files: Files) -> str:
-    if not page.file.name.startswith("life_cycle-"):
-        return source_md
-    return source_md.replace('<img src="', '<img src="../')
-
-
-on_page_markdown = plugins.CombinedEvent(fix_markdown, fix_img_links, populate_index_content)
+on_page_markdown = plugins.CombinedEvent(fix_markdown, populate_index_content)
 
 
 def populate_nav(files: Files) -> dict[str, list[Link]]:
