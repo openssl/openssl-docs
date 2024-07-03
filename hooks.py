@@ -1,14 +1,8 @@
+import re
 import shutil
 from pathlib import Path
 
-import marko
 import minify_html
-from marko.block import Heading
-from marko.block import ListItem
-from marko.block import Paragraph
-from marko.helpers import MarkoExtension
-from marko.inline import Link as MarkdownLink
-from marko.md_renderer import MarkdownRenderer
 from mkdocs import plugins
 from mkdocs.config.defaults import MkDocsConfig
 from mkdocs.structure.files import Files
@@ -18,27 +12,9 @@ from mkdocs.structure.pages import Page
 
 MAN_INDEXES = ["man1/index.md", "man3/index.md", "man5/index.md", "man7/index.md"]
 SKIP_FILES = ["index.md", "fips.md"]
+LINKS_PATTERN = re.compile(r"\.\.\/\.\.\/man[1,3,5,7]{1}\/[a-zA-Z0-9_\-.]+")
+HEADINGS_PATTERN = re.compile(r" {0,3}(#{1,6})((?=\s)[^\n]*?|[^\n\S]*)(?:(?<=\s)(?<!\\)#+)?[^\n\S]*$\n?", flags=re.M)
 LINKS_MAP = {}
-
-
-class HackedListItem(ListItem):
-
-    override = True
-
-    @classmethod
-    def parse(cls, source) -> ListItem:
-        state = cls(source.context.list_item_info)
-        state.children = []
-        with source.under_state(state):
-            if not source.next_line().strip():
-                source.consume()
-                if not source.next_line() or not source.next_line().strip():
-                    return state
-            state.children = source.parser.parse_source(source)
-        return state
-
-
-HackExtension = MarkoExtension(elements=[HackedListItem])
 
 
 def get_names_paragraph(content: str) -> str:
@@ -104,40 +80,21 @@ def populate_index_content(source_md: str, page: Page, config: MkDocsConfig, fil
     return source_md + "\n".join(sorted(rows))
 
 
-def fix_links(paragraph: Paragraph) -> Paragraph:
-    stack = [paragraph]
-    while stack:
-        current_child = stack.pop()
-        for child in current_child.children:
-            if isinstance(child, Paragraph):
-                stack.append(child)
-            if isinstance(child, MarkdownLink):
-                child.dest = LINKS_MAP.get(child.dest) or child.dest
-    return paragraph
+def replace_link(match: re.Match) -> str:
+    return LINKS_MAP.get(match.group()) or match.group()
 
 
-def fix_heading(heading: Heading, parser: marko.Markdown) -> Heading:
-    heading_text = f"#{parser.render(heading)}"
-    return parser.parse(heading_text)
+def replace_heading(match: re.Match) -> str:
+    return f"#{match.group()}"
 
 
 def fix_markdown(source_md: str, page: Page, config: MkDocsConfig, files: Files) -> str:
     if page.file.src_uri in SKIP_FILES + MAN_INDEXES:
         return source_md
-    parser = marko.Markdown(renderer=MarkdownRenderer, extensions=[HackExtension])
-    new_children = []
-    h1_parsed = parser.parse(f"# {page.file.name}")
-    h1 = h1_parsed.children[0]
-    new_children.append(h1)
-    parsed = parser.parse(source_md)
-    for child in parsed.children:
-        if isinstance(child, Paragraph):
-            child = fix_links(child)
-        if isinstance(child, Heading):
-            child = fix_heading(child, parser)
-        new_children.append(child)
-    parsed.children = new_children
-    return parser.render(parsed)
+    source_md = LINKS_PATTERN.sub(replace_link, source_md)
+    source_md = HEADINGS_PATTERN.sub(replace_heading, source_md)
+    source_md = f"# {page.file.name}\n" + source_md
+    return source_md
 
 
 def fix_img_links(source_md: str, page: Page, config: MkDocsConfig, files: Files) -> str:
