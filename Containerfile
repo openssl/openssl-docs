@@ -27,7 +27,9 @@ COPY --from=BASE /docs_venv /docs_venv
 
 RUN chmod -R a+rwX /docs_venv
 
-ENV PATH=/docs_venv/bin:$PATH
+ENV PATH=/docs_venv/bin:$PATH \
+    GIT_COMMITTER_NAME=openssl-machine \
+    GIT_COMMITTER_EMAIL=openssl-machine@openssl.org
 
 RUN useradd openssl-docs
 
