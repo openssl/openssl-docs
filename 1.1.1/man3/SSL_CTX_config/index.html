@@ -5,9 +5,7 @@ int SSL_config(SSL *s, const char *name);
 </code></pre></div><h2 id=description>DESCRIPTION<a title="Permanent link" class=headerlink href=#description>¶</a></h2><p>The functions SSL_CTX_config() and SSL_config() configure an <strong>SSL_CTX</strong> or <strong>SSL</strong> structure using the configuration <strong>name</strong>.<h2 id=notes>NOTES<a title="Permanent link" class=headerlink href=#notes>¶</a></h2><p>By calling SSL_CTX_config() or SSL_config() an application can perform many complex tasks based on the contents of the configuration file: greatly simplifying application configuration code. A degree of future proofing can also be achieved: an application can support configuration features in newer versions of OpenSSL automatically.<p>A configuration file must have been previously loaded, for example using CONF_modules_load_file(). See <a href=../../man5/config/>config(5)</a> for details of the configuration file syntax.<h2 id=return-values>RETURN VALUES<a title="Permanent link" class=headerlink href=#return-values>¶</a></h2><p>SSL_CTX_config() and SSL_config() return 1 for success or 0 if an error occurred.<h2 id=examples>EXAMPLES<a title="Permanent link" class=headerlink href=#examples>¶</a></h2><p>If the file "config.cnf" contains the following:<div class=highlight><pre><span></span><code>testapp = test_sect
 
 [test_sect]
-# list of configuration modules
-
-ssl_conf = ssl_sect
+</code></pre></div><p># # list of configuration modules<div class=highlight><pre><span></span><code>ssl_conf = ssl_sect
 
 [ssl_sect]
 server = server_section
