@@ -11,12 +11,12 @@ theme:
   favicon: images/favicon.ico
   name: material
   custom_dir: overrides
-  palette: 
+  palette:
     - scheme: default
       primary: blue grey
       accent: light blue
       toggle:
-        icon: material/brightness-7 
+        icon: material/brightness-7
         name: Switch to dark mode
     - scheme: slate
       primary: black

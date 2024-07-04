@@ -98,6 +98,7 @@ def fix_markdown(source_md: str, page: Page, config: MkDocsConfig, files: Files)
     source_md = f"# {page.file.name}\n" + source_md
     return source_md
 
+
 on_page_markdown = plugins.CombinedEvent(fix_markdown, populate_index_content)
 
 
