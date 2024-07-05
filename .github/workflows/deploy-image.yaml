@@ -1,0 +1,26 @@
+name: "Build and deploy container image"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: "Get date time tag"
+        run: echo "datetime_tag=$(date +%Y%m%d-%H%M%S)" >> $GITHUB_ENV
+      - name: "Build container image"
+        run: |
+          buildah bud \
+            -t quay.io/openssl-ci/docs:$(git rev-parse --short HEAD) \
+            -t quay.io/openssl-ci/docs:${{ env.datetime_tag }} \
+            -t quay.io/openssl-ci/docs:latest \
+            -f Containerfile
+      - name: "Login to the container registry"
+        run : buildah login -u="openssl-ci+machine" -p="${{ secrets.OPENSSL_MACHINE_TOKEN }}" quay.io
+      - name: "Push container"
+        run: |
+          buildah push quay.io/openssl-ci/docs:$(git rev-parse --short HEAD)
+          buildah push quay.io/openssl-ci/docs:${{ env.datetime_tag }}
+          buildah push quay.io/openssl-ci/docs:latest
