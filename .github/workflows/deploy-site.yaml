@@ -1,0 +1,24 @@
+name: "Deploy site"
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "OpenSSL branch"
+        required: true
+        default: "master"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: "Fetch gh-pages branch"
+        run: git fetch origin gh-pages --depth=1
+      - name: "Set permissions"
+        run: chmod -R a+rwX $(pwd)
+      - name: "Build site"
+        run: |
+          podman run -it -v $(pwd):/mnt -w /mnt --userns=keep-id \
+                 quay.io/openssl-ci/docs:20240705-204944 \
+                 python build.py ${{ github.event.inputs.branch }}

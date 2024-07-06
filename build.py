@@ -32,7 +32,10 @@ def build_manpages(tmp_dir: str):
 
 
 def clean_docs():
-    shutil.rmtree("docs/")
+    try:
+        shutil.rmtree("docs/")
+    except FileNotFoundError:
+        pass
 
 
 def create_dirs():
@@ -67,7 +70,7 @@ def copy_images(tmp_dir: str):
 
 
 def build_site(version: str):
-    return subprocess.run(["mike", "deploy", version, "--ignore-remote-status"]).returncode
+    return subprocess.run(["mike", "deploy", version]).returncode
 
 
 def main():
