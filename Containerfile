@@ -31,6 +31,8 @@ ENV PATH=/docs_venv/bin:$PATH \
     GIT_COMMITTER_NAME=openssl-machine \
     GIT_COMMITTER_EMAIL=openssl-machine@openssl.org
 
-RUN useradd openssl-docs
+RUN useradd -m openssl-docs
 
 USER openssl-docs
+
+RUN git config --global --add safe.directory "*"
