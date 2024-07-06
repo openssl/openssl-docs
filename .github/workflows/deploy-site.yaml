@@ -20,5 +20,5 @@ jobs:
       - name: "Build site"
         run: |
           podman run -it -v $(pwd):/mnt -w /mnt --userns=keep-id \
-                 quay.io/openssl-ci/docs:20240705-204944 \
+                 quay.io/openssl-ci/docs:20240706-200401 \
                  python build.py ${{ github.event.inputs.branch }}
