@@ -6,15 +6,12 @@ import tempfile
 from pathlib import Path
 
 
-VERSION_MAP = {
-    "master": "master",
-    "3.3": "openssl-3.3",
-    "3.2": "openssl-3.2",
-    "3.1": "openssl-3.1",
-    "3.0": "openssl-3.0",
-    "1.1.1": "OpenSSL_1_1_1-stable",
-    "1.0.2": "OpenSSL_1_0_2-stable",
-}
+def get_branch(version: str) -> str:
+    if version in ["1.0.2", "1.1.1"]:
+        return f"OpenSSL_{version.replace('.', '_')}-stable"
+    if version == "master":
+        return "master"
+    return f"openssl-{version}"
 
 
 def clone(branch: str, tmp_dir: str) -> None:
@@ -70,7 +67,7 @@ def copy_images(tmp_dir: str):
 
 
 def build_site(version: str):
-    return subprocess.run(["mike", "deploy", version]).returncode
+    return subprocess.run(["mike", "deploy", "--push", version]).returncode
 
 
 def main():
@@ -78,7 +75,7 @@ def main():
     clean_docs()
     create_dirs()
     with tempfile.TemporaryDirectory() as tmp_dir:
-        clone(VERSION_MAP[version], tmp_dir)
+        clone(get_branch(version), tmp_dir)
         if version not in ["1.0.2", "1.1.1"]:
             build_manpages(tmp_dir)
         convert_pod_to_md(tmp_dir)
