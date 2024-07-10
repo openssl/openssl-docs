@@ -1,3 +1,5 @@
+[![Deploy site](https://github.com/openssl/openssl-docs/actions/workflows/deploy-site.yaml/badge.svg?branch=gh-pages)](https://github.com/openssl/openssl-docs/actions/workflows/deploy-site.yaml)
+
 # docs.openssl.org
 
 OpenSSL Documentation website is based on
@@ -5,6 +7,11 @@ OpenSSL Documentation website is based on
 this repository contains required configuration and build scripts.
 
 ## Deployment
+
+The website is automatically rebuilt on changes in `doc` directory of `openssl/openssl`. Then a
+new commit is pushed to `gh-pages` branch which triggers
+[pages-build-deployment](https://github.com/openssl/openssl-docs/actions/workflows/pages/pages-build-deployment)
+GitHub Actions workflow.
 
 To deploy documentation website manually trigger
 [Deploy site](https://github.com/openssl/openssl-docs/actions/workflows/deploy-site.yaml) GitHub
@@ -31,6 +38,7 @@ To start playing around you can spin up a container and run commands:
 
     ```sh
     python build.py <OPENSSL VERSION>
+    ```
 
 4. Run the development web server:
 
