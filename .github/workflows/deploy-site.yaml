@@ -28,6 +28,6 @@ jobs:
                    python build.py ${{ github.event.inputs.branch }}"
       - name: "Push branch"
         run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
+          git config user.name openssl-machine
+          git config user.email openssl-machine@openssl.org
           git push origin gh-pages
