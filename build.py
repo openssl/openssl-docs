@@ -67,7 +67,7 @@ def copy_images(tmp_dir: str):
 
 
 def build_site(version: str):
-    return subprocess.run(["mike", "deploy", "--push", version]).returncode
+    return subprocess.run(["mike", "deploy", version]).returncode
 
 
 def main():
