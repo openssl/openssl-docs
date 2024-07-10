@@ -4,6 +4,12 @@ OpenSSL Documentation website is based on
 [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/) and
 this repository contains required configuration and build scripts.
 
+## Deployment
+
+To deploy documentation website manually trigger
+[Deploy site](https://github.com/openssl/openssl-docs/actions/workflows/deploy-site.yaml) GitHub
+Actions workflow.
+
 ## Local development
 
 All required dependencies are packed into a container image `quay.io/openssl-ci/docs`.
@@ -32,8 +38,22 @@ To start playing around you can spin up a container and run commands:
     mike serve -a 0.0.0.0:8000
     ```
 
-## Deployment
+## build.py
 
+A small wrapper script to clone a specific OpenSSL branch and build documentaton website with
+`mike`. Run it to build the website:
+
+```sh
+python build.py <OPENSSL VERSION>
+```
+
+`mike` puts generated content into a separate branch `gh-pages`. Please refer `mike`
+[documentation](https://github.com/jimporter/mike) for the details.
+
+## hooks.py
+
+All pre- and post- processing is done via `MkDocs` hooks. Please refer `MkDocs`
+[documentation](https://www.mkdocs.org/dev-guide/plugins/#events) for the details.
 
 
 ## References
