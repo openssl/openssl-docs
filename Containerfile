@@ -1,13 +1,7 @@
 FROM docker.io/library/pypy:3.10-slim-bookworm as BASE
 
 RUN apt-get update && \
-    apt-get install -y curl gcc
-
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-
-ENV PATH=/root/.cargo/bin:/docs_venv/bin:$PATH
-
-RUN rustup install 1.79.0
+    apt-get install -y gcc
 
 COPY requirements.txt /requirements.txt
 
@@ -34,5 +28,3 @@ ENV PATH=/docs_venv/bin:$PATH \
 RUN useradd -m openssl-docs
 
 USER openssl-docs
-
-RUN git config --global --add safe.directory "*"
