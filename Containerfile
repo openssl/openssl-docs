@@ -3,6 +3,8 @@ FROM docker.io/library/pypy:3.10-slim-bookworm as BASE
 RUN apt-get update && \
     apt-get install -y gcc
 
+ENV PATH=/docs_venv/bin:$PATH
+
 COPY requirements.txt /requirements.txt
 
 RUN python3 -m venv /docs_venv && \
