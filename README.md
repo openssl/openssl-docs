@@ -1,4 +1,4 @@
-[![Deploy site](https://github.com/openssl/openssl-docs/actions/workflows/deploy-site.yaml/badge.svg?branch=gh-pages)](https://github.com/openssl/openssl-docs/actions/workflows/deploy-site.yaml)
+[![Deploy site](https://github.com/openssl/openssl-docs/actions/workflows/deploy-site.yaml/badge.svg?branch=main)](https://github.com/openssl/openssl-docs/actions/workflows/deploy-site.yaml)
 
 # docs.openssl.org
 
