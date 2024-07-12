@@ -30,4 +30,5 @@ jobs:
         run: |
           git config user.name openssl-machine
           git config user.email openssl-machine@openssl.org
+          git switch gh-pages
           until git push origin gh-pages; do git pull --rebase origin gh-pages; done
