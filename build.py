@@ -26,6 +26,13 @@ def clone(branch: str, tmp_dir: str) -> None:
     )
 
 
+def get_commit_hash(tmp_dir: str) -> str:
+    ps = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=tmp_dir, capture_output=True)
+    if ps.returncode != 0:
+        raise SystemExit(ps.returncode)
+    return ps.stdout.decode("utf-8").strip()
+
+
 def build_manpages(tmp_dir: str):
     if return_code := subprocess.run(["sh", "config"], cwd=tmp_dir).returncode != 0:
         raise SystemExit(return_code)
@@ -72,8 +79,9 @@ def copy_images(tmp_dir: str):
     shutil.copytree(f"{tmp_dir}/doc/man7/img", "docs/man7/img")
 
 
-def build_site(version: str):
-    return subprocess.run(["mike", "deploy", version]).returncode
+def build_site(commit: str, version: str):
+    commit_msg = f"deploy openssl/openssl@{commit} to {version}"
+    return subprocess.run(["mike", "deploy", "-m", commit_msg, version]).returncode
 
 
 def main():
@@ -83,12 +91,13 @@ def main():
     create_dirs()
     with tempfile.TemporaryDirectory() as tmp_dir:
         clone(branch, tmp_dir)
+        commit = get_commit_hash(tmp_dir)
         if version not in ["1.0.2", "1.1.1"]:
             build_manpages(tmp_dir)
         convert_pod_to_md(tmp_dir)
         if version not in ["1.0.2", "1.1.1"]:
             copy_images(tmp_dir)
-    return build_site(version)
+    return build_site(commit, version)
 
 
 if __name__ == "__main__":
