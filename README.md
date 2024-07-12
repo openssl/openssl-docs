@@ -52,7 +52,7 @@ A small wrapper script to clone a specific OpenSSL branch and build documentaton
 `mike`. Run it to build the website:
 
 ```sh
-python build.py <OPENSSL VERSION>
+python build.py <OPENSSL BRANCH>
 ```
 
 `mike` puts generated content into a separate branch `gh-pages`. Please refer `mike`
