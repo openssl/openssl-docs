@@ -26,7 +26,7 @@ jobs:
                  quay.io/openssl-ci/docs:20240711-115832 sh -c "\
                    git config --global --add safe.directory /mnt && \
                    python build.py ${{ github.event.inputs.branch }}"
-      - name: "Fix owenership"
+      - name: "Fix ownership"
         run: sudo chown -R "${USER:-$(id -un)}" $(pwd)
       - name: "Push gh-pages branch"
         run: |
