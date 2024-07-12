@@ -1,4 +1,5 @@
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -6,12 +7,17 @@ import tempfile
 from pathlib import Path
 
 
-def get_branch(version: str) -> str:
-    if version in ["1.0.2", "1.1.1"]:
-        return f"OpenSSL_{version.replace('.', '_')}-stable"
-    if version == "master":
+def get_version_from_branch(branch: str) -> str:
+    if branch == "master":
         return "master"
-    return f"openssl-{version}"
+    if match := re.match(r"openssl-(3\.[0-9]+)", branch):
+        return match.group(1)
+    if branch == "OpenSSL_1_1_1-stable":
+        return "1.1.1"
+    if branch == "OpenSSL_1_0_2-stable":
+        return "1.0.2"
+    print(f"Incorrect branch {branch}")
+    raise SystemExit(1)
 
 
 def clone(branch: str, tmp_dir: str) -> None:
@@ -71,11 +77,12 @@ def build_site(version: str):
 
 
 def main():
-    version = sys.argv[1]
+    branch = sys.argv[1]
+    version = get_version_from_branch(branch)
     clean_docs()
     create_dirs()
     with tempfile.TemporaryDirectory() as tmp_dir:
-        clone(get_branch(version), tmp_dir)
+        clone(branch, tmp_dir)
         if version not in ["1.0.2", "1.1.1"]:
             build_manpages(tmp_dir)
         convert_pod_to_md(tmp_dir)
