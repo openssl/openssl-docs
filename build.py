@@ -27,7 +27,7 @@ def clone(branch: str, tmp_dir: str) -> None:
 
 
 def get_commit_hash(tmp_dir: str) -> str:
-    ps = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=tmp_dir, capture_output=True)
+    ps = subprocess.run(["git", "rev-parse", "HEAD"], cwd=tmp_dir, capture_output=True)
     if ps.returncode != 0:
         raise SystemExit(ps.returncode)
     return ps.stdout.decode("utf-8").strip()
