@@ -1,5 +1,7 @@
+import os
 import re
 import shutil
+import string
 from pathlib import Path
 
 import htmlmin
@@ -15,6 +17,7 @@ SKIP_FILES = ["index.md", "fips.md"]
 LINKS_PATTERN = re.compile(r"\.\.\/\.\.\/man[1,3,5,7]{1}\/[a-zA-Z0-9_\-.]+")
 HEADINGS_PATTERN = re.compile(r" {0,3}(#{1,6})((?=\s)[^\n]*?|[^\n\S]*)(?:(?<=\s)(?<!\\)#+)?[^\n\S]*$\n?", flags=re.M)
 LINKS_MAP = {}
+REDIRECT_PAGES = {}
 
 
 def get_names_paragraph(content: str) -> str:
@@ -56,6 +59,10 @@ def on_files(files: Files, config: MkDocsConfig) -> Files | None:
             # e.g. "openssl/core_dispatch.h" to "openssl-core_dispatch.h"
             name = name.strip().replace("/", "-")
             LINKS_MAP[f"../../{man_dir}/{name}"] = f"../{man_dir}/{man_file.name}.md"
+            if name != man_file.name:
+                redirect_page_uri = f"{man_file.dest_dir}/{man_dir}/{name}"
+                source_page_uri = f"../../{man_file.dest_uri}"
+                REDIRECT_PAGES[redirect_page_uri] = source_page_uri
     return files
 
 
@@ -148,3 +155,11 @@ def on_nav(nav: Navigation, config: MkDocsConfig, files: Files) -> Navigation:
 
 def on_post_page(output: str, page: Page, config: MkDocsConfig) -> str:
     return htmlmin.minify(output, remove_comments=True, remove_empty_space=True)
+
+
+def on_post_build(config: MkDocsConfig):
+    template = '<!DOCTYPE html><html lang="en"><head><meta name="robots" content="noindex"><meta charset="utf-8"><meta http-equiv="refresh" content="0; url={}"></head></html>'
+    for redirect_page_uri, source_page_uri in REDIRECT_PAGES.items():
+        path = Path(redirect_page_uri)
+        os.makedirs(path.parent)
+        path.write_text(template.format(source_page_uri))
