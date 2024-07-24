@@ -161,5 +161,6 @@ def on_post_build(config: MkDocsConfig):
     template = '<!DOCTYPE html><html lang="en"><head><meta name="robots" content="noindex"><meta charset="utf-8"><meta http-equiv="refresh" content="0; url={}"></head></html>'
     for redirect_page_uri, source_page_uri in REDIRECT_PAGES.items():
         path = Path(redirect_page_uri)
-        os.makedirs(path.parent)
-        path.write_text(template.format(source_page_uri))
+        os.makedirs(path)
+        index_html = path / "index.html"
+        index_html.write_text(template.format(source_page_uri))
