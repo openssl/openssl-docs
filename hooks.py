@@ -61,8 +61,8 @@ def on_files(files: Files, config: MkDocsConfig) -> Files | None:
             LINKS_MAP[f"../../{man_dir}/{name}"] = f"../{man_dir}/{man_file.name}.md"
             if name != man_file.name:
                 redirect_page_uri = f"{man_file.dest_dir}/{man_dir}/{name}"
-                source_page_uri = f"../../{man_file.dest_uri}"
-                REDIRECT_PAGES[redirect_page_uri] = source_page_uri
+                source_page_uri = Path(f"../../{man_file.dest_uri}")
+                REDIRECT_PAGES[redirect_page_uri] = source_page_uri.parent
     return files
 
 
