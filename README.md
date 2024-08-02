@@ -2,9 +2,10 @@
 
 # docs.openssl.org
 
-OpenSSL Documentation website is based on
+The OpenSSL Documentation website is based on
 [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/) and
-this repository contains required configuration and build scripts.
+this repository contains the required configuration files and build scripts.
+`docs.openssl.org` is hosted on GitHub Pages.
 
 ## Deployment
 
@@ -37,7 +38,7 @@ To start playing around you can spin up a container and run commands:
 3. Build the docs:
 
     ```sh
-    python build.py <OPENSSL VERSION>
+    python build.py <OPENSSL BRANCH>
     ```
 
 4. Run the development web server:
@@ -48,7 +49,7 @@ To start playing around you can spin up a container and run commands:
 
 ## build.py
 
-A small wrapper script to clone a specific OpenSSL branch and build documentaton website with
+A small wrapper script to clone a specific OpenSSL branch and build a documentation website with
 `mike`. Run it to build the website:
 
 ```sh
