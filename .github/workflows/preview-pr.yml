@@ -1,4 +1,4 @@
-name: "Deploy site"
+name: "Build preview from PR"
 
 on:
   pull_request:
@@ -6,6 +6,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
+      SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+      GH_PR_TOKEN: ${{ secrets.GH_PR_TOKEN }}
+      GH_PR_NUM: ${{ github.event.number }}
     steps:
       - uses: actions/checkout@v4
       - name: "Fetch gh-pages branch"
@@ -20,4 +25,18 @@ jobs:
                    python build.py master"
       - name: "Fix ownership"
         run: sudo chown -R "${USER:-$(id -un)}" $(pwd)
-
+      - name: "Switch to gh-pages"
+        run: git switch gh-pages
+      - name: "Copy files"
+        run: rsync -r $(pwd) /tmp
+      - name: "Switch back"
+        run: git switch --detach -
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+      - name: "Install dependencies"
+        run: |
+          echo '{"type": "module"}' > package.json
+          npm install @types/node @octokit/rest surge
+      - name: "Upload site"
+        run: node .github/upload-preview.js /tmp/$(basename $(pwd))
