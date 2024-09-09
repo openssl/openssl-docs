@@ -10,7 +10,7 @@ int CONF_modules_load(const CONF *cnf, const char *appname,
    ERR_print_errors_fp(stderr);
    exit(1);
 }
-</code></pre></div><p>Load default configuration file using the section indicated by "myapp", tolerate missing files, but exit on other errors:</p><div class=highlight><pre><span></span><code>if (CONF_modules_load_file(NULL, &quot;myapp&quot;,
+</code></pre></div><p>Load default configuration file using the section indicated by &quot;myapp&quot;, tolerate missing files, but exit on other errors:</p><div class=highlight><pre><span></span><code>if (CONF_modules_load_file(NULL, &quot;myapp&quot;,
                            CONF_MFLAGS_IGNORE_MISSING_FILE) &lt;= 0) {
    fprintf(stderr, &quot;FATAL: error loading configuration file\n&quot;);
    ERR_print_errors_fp(stderr);

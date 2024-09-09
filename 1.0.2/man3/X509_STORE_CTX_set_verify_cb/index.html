@@ -14,7 +14,7 @@ void X509_STORE_CTX_set_verify_cb(X509_STORE_CTX *ctx,
        /* Otherwise don&#39;t override */
        return ok;
        }
-</code></pre></div><p>More complex example, we don't wish to continue after <strong>any</strong> certificate has expired just one specific case:</p><div class=highlight><pre><span></span><code>int verify_callback(int ok, X509_STORE_CTX *ctx)
+</code></pre></div><p>More complex example, we don&#39;t wish to continue after <strong>any</strong> certificate has expired just one specific case:</p><div class=highlight><pre><span></span><code>int verify_callback(int ok, X509_STORE_CTX *ctx)
        {
        int err = X509_STORE_CTX_get_error(ctx);
        X509 *err_cert = X509_STORE_CTX_get_current_cert(ctx);
