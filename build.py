@@ -70,7 +70,10 @@ def convert_pod_to_md(tmp_dir: str):
         if "internal" in pod.parent.parts:
             continue
         target = f"docs/{dir_map[pod.parent.name]}/{pod.stem}.md"
-        ps = subprocess.run(["pod2markdown", "--man-url-prefix", "../../man", str(pod), target])
+        ps = subprocess.run(["pod2markdown",
+                             "--html-encode-chars", "1",
+                             "--man-url-prefix", "../../man",
+                             str(pod), target])
         if ps.returncode != 0:
             raise SystemExit(ps.returncode)
 
