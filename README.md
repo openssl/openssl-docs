@@ -31,8 +31,13 @@ To start playing around you can spin up a container and run commands:
 
 2. Run the container:
 
+- For Podman:
     ```sh
     podman run -it -v $(pwd)/openssl-docs:/mnt -w /mnt -p 8000:8000 --userns=keep-id quay.io/openssl-ci/docs:latest bash
+    ```
+- For docker (mac):
+    ```sh
+    docker run -it -v $(pwd)/openssl-docs:/mnt -w /mnt -p 8000:8000  quay.io/openssl-ci/docs:latest bash
     ```
 
 3. Build the docs:
