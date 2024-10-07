@@ -1,0 +1,12 @@
+<script id="__analytics">
+  function __md_analytics() {
+
+    var script = document.createElement("script")
+    script.async = true
+    script.src = "https://api.transpond.io/tracker?am={{ config.extra.analytics.property }}"
+
+    var container = document.getElementById("__analytics")
+    container.insertAdjacentElement("afterEnd", script)
+
+  }
+</script>
