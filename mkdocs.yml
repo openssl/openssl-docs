@@ -5,6 +5,9 @@ extra:
   version:
     provider: mike
     default: master
+  analytics:
+    provider: transpond_io
+    property: MzgyOTE%3D
 extra_css:
   - stylesheets/extra.css
 theme:
