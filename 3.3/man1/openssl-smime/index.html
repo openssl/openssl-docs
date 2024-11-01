@@ -21,9 +21,9 @@
        -from steve@openssl.org -to someone@somewhere \
        -subject &quot;Signed message&quot; | sendmail someone@somewhere
 </code></pre></div><p>Verify a message and extract the signer&#39;s certificate if successful:</p><div class=highlight><pre><span></span><code>openssl smime -verify -in mail.msg -signer user.pem -out signedtext.txt
-</code></pre></div><p>Send encrypted mail using triple DES:</p><div class=highlight><pre><span></span><code>openssl smime -encrypt -in in.txt -from steve@openssl.org \
+</code></pre></div><p>Send encrypted mail using triple DES:</p><div class=highlight><pre><span></span><code>openssl smime -encrypt -in in.txt -out mail.msg -from steve@openssl.org \
        -to someone@somewhere -subject &quot;Encrypted message&quot; \
-       -des3 user.pem -out mail.msg
+       -des3 user.pem
 </code></pre></div><p>Sign and encrypt mail:</p><div class=highlight><pre><span></span><code>openssl smime -sign -in ml.txt -signer my.pem -text \
        | openssl smime -encrypt -out mail.msg \
        -from steve@openssl.org -to someone@somewhere \
