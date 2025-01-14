@@ -1711,6 +1711,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://docs.openssl.org/master/man3/OPENSSL_load_u16_le/</loc>
+         <lastmod>2025-01-14</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://docs.openssl.org/master/man3/OPENSSL_malloc/</loc>
          <lastmod>2025-01-14</lastmod>
          <changefreq>daily</changefreq>
