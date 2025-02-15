@@ -256,6 +256,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://docs.openssl.org/master/man1/openssl-skeyutl/</loc>
+         <lastmod>2025-02-15</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://docs.openssl.org/master/man1/openssl-smime/</loc>
          <lastmod>2025-02-15</lastmod>
          <changefreq>daily</changefreq>
@@ -1437,6 +1442,16 @@
     </url>
     <url>
          <loc>https://docs.openssl.org/master/man3/EVP_SIGNATURE/</loc>
+         <lastmod>2025-02-15</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://docs.openssl.org/master/man3/EVP_SKEY/</loc>
+         <lastmod>2025-02-15</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://docs.openssl.org/master/man3/EVP_SKEYMGMT/</loc>
          <lastmod>2025-02-15</lastmod>
          <changefreq>daily</changefreq>
     </url>
@@ -4407,6 +4422,11 @@
     </url>
     <url>
          <loc>https://docs.openssl.org/master/man7/provider-signature/</loc>
+         <lastmod>2025-02-15</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://docs.openssl.org/master/man7/provider-skeymgmt/</loc>
          <lastmod>2025-02-15</lastmod>
          <changefreq>daily</changefreq>
     </url>
