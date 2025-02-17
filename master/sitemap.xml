@@ -2671,6 +2671,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://docs.openssl.org/master/man3/SSL_CTX_set_domain_flags/</loc>
+         <lastmod>2025-02-17</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://docs.openssl.org/master/man3/SSL_CTX_set_generate_session_id/</loc>
          <lastmod>2025-02-17</lastmod>
          <changefreq>daily</changefreq>
@@ -2702,6 +2707,11 @@
     </url>
     <url>
          <loc>https://docs.openssl.org/master/man3/SSL_CTX_set_msg_callback/</loc>
+         <lastmod>2025-02-17</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://docs.openssl.org/master/man3/SSL_CTX_set_new_pending_conn_cb/</loc>
          <lastmod>2025-02-17</lastmod>
          <changefreq>daily</changefreq>
     </url>
@@ -3142,6 +3152,16 @@
     </url>
     <url>
          <loc>https://docs.openssl.org/master/man3/SSL_new/</loc>
+         <lastmod>2025-02-17</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://docs.openssl.org/master/man3/SSL_new_domain/</loc>
+         <lastmod>2025-02-17</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://docs.openssl.org/master/man3/SSL_new_listener/</loc>
          <lastmod>2025-02-17</lastmod>
          <changefreq>daily</changefreq>
     </url>
@@ -4256,6 +4276,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://docs.openssl.org/master/man7/openssl-quic-concurrency/</loc>
+         <lastmod>2025-02-17</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://docs.openssl.org/master/man7/openssl-quic/</loc>
          <lastmod>2025-02-17</lastmod>
          <changefreq>daily</changefreq>
@@ -4312,6 +4337,16 @@
     </url>
     <url>
          <loc>https://docs.openssl.org/master/man7/ossl-guide-quic-multi-stream/</loc>
+         <lastmod>2025-02-17</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://docs.openssl.org/master/man7/ossl-guide-quic-server-block/</loc>
+         <lastmod>2025-02-17</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://docs.openssl.org/master/man7/ossl-guide-quic-server-non-block/</loc>
          <lastmod>2025-02-17</lastmod>
          <changefreq>daily</changefreq>
     </url>
