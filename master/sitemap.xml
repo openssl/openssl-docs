@@ -4066,6 +4066,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://docs.openssl.org/master/man7/EVP_PKEY-SLH-DSA/</loc>
+         <lastmod>2025-02-18</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://docs.openssl.org/master/man7/EVP_PKEY-SM2/</loc>
          <lastmod>2025-02-18</lastmod>
          <changefreq>daily</changefreq>
@@ -4142,6 +4147,11 @@
     </url>
     <url>
          <loc>https://docs.openssl.org/master/man7/EVP_SIGNATURE-RSA/</loc>
+         <lastmod>2025-02-18</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://docs.openssl.org/master/man7/EVP_SIGNATURE-SLH-DSA/</loc>
          <lastmod>2025-02-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
