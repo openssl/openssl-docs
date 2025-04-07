@@ -13,7 +13,7 @@ from mkdocs.structure.nav import Navigation
 from mkdocs.structure.pages import Page
 
 MAN_INDEXES = ["man1/index.md", "man3/index.md", "man5/index.md", "man7/index.md"]
-SKIP_FILES = ["index.md", "fips.md"]
+SKIP_FILES = ["index.md", "fips.md", "OpenSSL300Design.md"]
 LINKS_PATTERN = re.compile(r"\.\.\/\.\.\/man[1,3,5,7]{1}\/[a-zA-Z0-9_\-.]+")
 HEADINGS_PATTERN = re.compile(r" {0,3}(#{1,6})((?=\s)[^\n]*?|[^\n\S]*)(?:(?<=\s)(?<!\\)#+)?[^\n\S]*$\n?", flags=re.M)
 LINKS_MAP = {}
@@ -135,6 +135,7 @@ def on_nav(nav: Navigation, config: MkDocsConfig, files: Files) -> Navigation:
     nav_map = {
         "index": "Home",
         "fips": "FIPS-140",
+        "OpenSSL300Design": "OpenSSL 3.0.0 Design (Draft)",
         "man1": "Commands",
         "man3": "Libraries",
         "man5": "File Formats",
