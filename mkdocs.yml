@@ -3,6 +3,7 @@ site_url: https://docs.openssl.org/
 repo_url: https://github.com/openssl/openssl
 not_in_nav: |
   /OpenSSL300Design.md
+  /OpenSSLStrategicArchitecture.md
 extra:
   version:
     provider: mike
