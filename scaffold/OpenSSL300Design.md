@@ -11,8 +11,8 @@ date: November, 2020
 
 This document outlines the design of OpenSSL 3.0, the next version of
 OpenSSL after 1.1.1. It assumes familiarity with the document entitled
-_OpenSSL Strategic Architecture_ and a working knowledge of OpenSSL
-1.1.x.
+[OpenSSL Strategic Architecture](OpenSSLStrategicArchitecture.md) and a
+working knowledge of OpenSSL 1.1.x.
 
 The OpenSSL 3.0 release will have minimal impact to the vast majority
 of existing applications; almost all well-behaved applications will
