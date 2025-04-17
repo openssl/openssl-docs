@@ -38,9 +38,22 @@ EVP_PKEY_get_octet_string_param(pkey, OSSL_PKEY_PARAM_PUB_KEY,
 
 [openssl_init]
 providers = providers_sect
-</code></pre></div><p># # Can be referenced in one or more provider sections [ml_dsa_sect] prefer_seed = yes retain_seed = yes # # OQS legacy formats disabled input_formats = seed-priv, seed-only, priv-only # # Output either the seed alone, or else the key alone output_formats = seed-only, priv-only</p><div class=highlight><pre><span></span><code>[providers_sect]
+
+# Can be referenced in one or more provider sections
+[ml_dsa_sect]
+prefer_seed = yes
+retain_seed = yes
+# OQS legacy formats disabled
+input_formats = seed-priv, seed-only, priv-only
+# Output either the seed alone, or else the key alone
+output_formats = seed-only, priv-only
+
+[providers_sect]
 default = default_sect
-</code></pre></div><p># # Or perhaps just: base = default_sect base = base_sect</p><div class=highlight><pre><span></span><code>[default_sect]
+# Or perhaps just: base = default_sect
+base = base_sect
+
+[default_sect]
 ml-dsa = ml_dsa_sect
 
 [base_sect]

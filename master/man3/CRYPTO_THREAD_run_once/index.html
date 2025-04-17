@@ -44,7 +44,11 @@ uint32_t OSSL_get_thread_support_flags(void);
     /* no thread support */
 #endif
 </code></pre></div><p>This example safely initializes and uses a lock.</p><div class=highlight><pre><span></span><code>#ifdef _WIN32
-</code></pre></div><p># # include <windows.h> #endif #include <openssl crypto.h></p><div class=highlight><pre><span></span><code>static CRYPTO_ONCE once = CRYPTO_ONCE_STATIC_INIT;
+# include &lt;windows.h&gt;
+#endif
+#include &lt;openssl/crypto.h&gt;
+
+static CRYPTO_ONCE once = CRYPTO_ONCE_STATIC_INIT;
 static CRYPTO_RWLOCK *lock;
 
 static void myinit(void)
