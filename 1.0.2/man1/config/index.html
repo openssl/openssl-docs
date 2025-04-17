@@ -29,28 +29,59 @@ some_new_oid = 1.2.3.4
 some_other_oid = 1.2.3.5
 </code></pre></div><p>In OpenSSL 0.9.8 it is also possible to set the value to the long name followed by a comma and the numerical OID form. For example:</p><div class=highlight><pre><span></span><code>shortName = some object long name, 1.2.3.4
 </code></pre></div><h3 id=engine-configuration-module>ENGINE CONFIGURATION MODULE<a class=headerlink href=#engine-configuration-module title="Permanent link">&para;</a></h3><p>This ENGINE configuration module has the name <strong>engines</strong>. The value of this variable points to a section containing further ENGINE configuration information.</p><p>The section pointed to by <strong>engines</strong> is a table of engine names (though see <strong>engine_id</strong> below) and further sections containing configuration information specific to each ENGINE.</p><p>Each ENGINE specific section is used to set default algorithms, load dynamic, perform initialization and send ctrls. The actual operation performed depends on the <em>command</em> name which is the name of the name value pair. The currently supported commands are listed below.</p><p>For example:</p><div class=highlight><pre><span></span><code>[engine_section]
-</code></pre></div><p># # Configure ENGINE named "foo" foo = foo_section # # Configure ENGINE named "bar" bar = bar_section</p><div class=highlight><pre><span></span><code>[foo_section]
+
+# Configure ENGINE named &quot;foo&quot;
+foo = foo_section
+# Configure ENGINE named &quot;bar&quot;
+bar = bar_section
+
+[foo_section]
 ... foo ENGINE specific commands ...
 
 [bar_section]
 ... &quot;bar&quot; ENGINE specific commands ...
 </code></pre></div><p>The command <strong>engine_id</strong> is used to give the ENGINE name. If used this command must be first. For example:</p><div class=highlight><pre><span></span><code>[engine_section]
-</code></pre></div><p># # This would normally handle an ENGINE named "foo" foo = foo_section</p><div class=highlight><pre><span></span><code>[foo_section]
-</code></pre></div><p># # Override default name and use "myfoo" instead. engine_id = myfoo</p><p>The command <strong>dynamic_path</strong> loads and adds an ENGINE from the given path. It is equivalent to sending the ctrls <strong>SO_PATH</strong> with the path argument followed by <strong>LIST_ADD</strong> with value 2 and <strong>LOAD</strong> to the dynamic ENGINE. If this is not the required behaviour then alternative ctrls can be sent directly to the dynamic ENGINE using ctrl commands.</p><p>The command <strong>init</strong> determines whether to initialize the ENGINE. If the value is <strong>0</strong> the ENGINE will not be initialized, if <strong>1</strong> and attempt it made to initialized the ENGINE immediately. If the <strong>init</strong> command is not present then an attempt will be made to initialize the ENGINE after all commands in its section have been processed.</p><p>The command <strong>default_algorithms</strong> sets the default algorithms an ENGINE will supply using the functions <strong>ENGINE_set_default_string()</strong></p><p>If the name matches none of the above command names it is assumed to be a ctrl command which is sent to the ENGINE. The value of the command is the argument to the ctrl command. If the value is the string <strong>EMPTY</strong> then no value is sent to the command.</p><p>For example:</p><div class=highlight><pre><span></span><code>[engine_section]
-</code></pre></div><p># # Configure ENGINE named "foo" foo = foo_section</p><div class=highlight><pre><span></span><code>[foo_section]
-</code></pre></div><p># # Load engine from DSO dynamic_path = /some/path/fooengine.so # # A foo specific ctrl. some_ctrl = some_value # # Another ctrl that doesn't take a value. other_ctrl = EMPTY # # Supply all default algorithms default_algorithms = ALL</p><h3 id=evp-configuration-module>EVP CONFIGURATION MODULE<a class=headerlink href=#evp-configuration-module title="Permanent link">&para;</a></h3><p>This modules has the name <strong>alg_section</strong> which points to a section containing algorithm commands.</p><p>Currently the only algorithm command supported is <strong>fips_mode</strong> whose value should be a boolean string such as <strong>on</strong> or <strong>off</strong>. If the value is <strong>on</strong> this attempt to enter FIPS mode. If the call fails or the library is not FIPS capable then an error occurs.</p><p>For example:</p><div class=highlight><pre><span></span><code>alg_section = evp_settings
+# This would normally handle an ENGINE named &quot;foo&quot;
+foo = foo_section
+
+[foo_section]
+# Override default name and use &quot;myfoo&quot; instead.
+engine_id = myfoo
+</code></pre></div><p>The command <strong>dynamic_path</strong> loads and adds an ENGINE from the given path. It is equivalent to sending the ctrls <strong>SO_PATH</strong> with the path argument followed by <strong>LIST_ADD</strong> with value 2 and <strong>LOAD</strong> to the dynamic ENGINE. If this is not the required behaviour then alternative ctrls can be sent directly to the dynamic ENGINE using ctrl commands.</p><p>The command <strong>init</strong> determines whether to initialize the ENGINE. If the value is <strong>0</strong> the ENGINE will not be initialized, if <strong>1</strong> and attempt it made to initialized the ENGINE immediately. If the <strong>init</strong> command is not present then an attempt will be made to initialize the ENGINE after all commands in its section have been processed.</p><p>The command <strong>default_algorithms</strong> sets the default algorithms an ENGINE will supply using the functions <strong>ENGINE_set_default_string()</strong></p><p>If the name matches none of the above command names it is assumed to be a ctrl command which is sent to the ENGINE. The value of the command is the argument to the ctrl command. If the value is the string <strong>EMPTY</strong> then no value is sent to the command.</p><p>For example:</p><div class=highlight><pre><span></span><code>[engine_section]
+
+# Configure ENGINE named &quot;foo&quot;
+foo = foo_section
+
+[foo_section]
+# Load engine from DSO
+dynamic_path = /some/path/fooengine.so
+# A foo specific ctrl.
+some_ctrl = some_value
+# Another ctrl that doesn&#39;t take a value.
+other_ctrl = EMPTY
+# Supply all default algorithms
+default_algorithms = ALL
+</code></pre></div><h3 id=evp-configuration-module>EVP CONFIGURATION MODULE<a class=headerlink href=#evp-configuration-module title="Permanent link">&para;</a></h3><p>This modules has the name <strong>alg_section</strong> which points to a section containing algorithm commands.</p><p>Currently the only algorithm command supported is <strong>fips_mode</strong> whose value should be a boolean string such as <strong>on</strong> or <strong>off</strong>. If the value is <strong>on</strong> this attempt to enter FIPS mode. If the call fails or the library is not FIPS capable then an error occurs.</p><p>For example:</p><div class=highlight><pre><span></span><code>alg_section = evp_settings
 
 [evp_settings]
 
 fips_mode = on
 </code></pre></div><h2 id=notes>NOTES<a class=headerlink href=#notes title="Permanent link">&para;</a></h2><p>If a configuration file attempts to expand a variable that doesn&#39;t exist then an error is flagged and the file will not load. This can happen if an attempt is made to expand an environment variable that doesn&#39;t exist. For example in a previous version of OpenSSL the default OpenSSL master configuration file used the value of <strong>HOME</strong> which may not be defined on non Unix systems and would cause an error.</p><p>This can be worked around by including a <strong>default</strong> section to provide a default value: then if the environment lookup fails the default value will be used instead. For this to work properly the default value must be defined earlier in the configuration file than the expansion. See the <strong>EXAMPLES</strong> section for an example of how to do this.</p><p>If the same variable exists in the same section then all but the last value will be silently ignored. In certain circumstances such as with DNs the same field may occur multiple times. This is usually worked around by ignoring any characters before an initial <strong>.</strong> e.g.</p><div class=highlight><pre><span></span><code>1.OU=&quot;My first OU&quot;
 2.OU=&quot;My Second OU&quot;
-</code></pre></div><h2 id=examples>EXAMPLES<a class=headerlink href=#examples title="Permanent link">&para;</a></h2><p>Here is a sample configuration file using some of the features mentioned above.</p><p># # This is the default section.</p><div class=highlight><pre><span></span><code>HOME=/temp
+</code></pre></div><h2 id=examples>EXAMPLES<a class=headerlink href=#examples title="Permanent link">&para;</a></h2><p>Here is a sample configuration file using some of the features mentioned above.</p><div class=highlight><pre><span></span><code># This is the default section.
+
+HOME=/temp
 RANDFILE= ${ENV::HOME}/.rnd
 configdir=$ENV::HOME/config
 
 [ section_one ]
-</code></pre></div><p># # We are now in section one.</p><p># # Quotes permit leading and trailing whitespace any = " any variable name "</p><div class=highlight><pre><span></span><code>other = A string that can \
+
+# We are now in section one.
+
+# Quotes permit leading and trailing whitespace
+any = &quot; any variable name &quot;
+
+other = A string that can \
 cover several lines \
 by including \\ characters
 
@@ -60,11 +91,40 @@ message = Hello World\n
 
 greeting = $section_one::message
 </code></pre></div><p>This next example shows how to expand environment variables safely.</p><p>Suppose you want a variable called <strong>tmpfile</strong> to refer to a temporary filename. The directory it is placed in can determined by the the <strong>TEMP</strong> or <strong>TMP</strong> environment variables but they may not be set to any value at all. If you just include the environment variable names and the variable doesn&#39;t exist then this will cause an error when an attempt is made to load the configuration file. By making use of the default section both values can be looked up with <strong>TEMP</strong> taking priority and <strong>/tmp</strong> used if neither is defined:</p><div class=highlight><pre><span></span><code>TMP=/tmp
-</code></pre></div><p># # The above value is used if TMP isn't in the environment TEMP=$ENV::TMP # # The above value is used if TEMP isn't in the environment tmpfile=${ENV::TEMP}/tmp.filename</p><p>Simple OpenSSL library configuration example to enter FIPS mode:</p><p># # Default appname: should match "appname" parameter (if any) # # supplied to CONF_modules_load_file et al. openssl_conf = openssl_conf_section</p><div class=highlight><pre><span></span><code>[openssl_conf_section]
-</code></pre></div><p># # Configuration module list alg_section = evp_sect</p><div class=highlight><pre><span></span><code>[evp_sect]
-</code></pre></div><p># # Set to "yes" to enter FIPS mode if supported fips_mode = yes</p><p>Note: in the above example you will get an error in non FIPS capable versions of OpenSSL.</p><p>More complex OpenSSL library configuration. Add OID and don&#39;t enter FIPS mode:</p><p># # Default appname: should match "appname" parameter (if any) # # supplied to CONF_modules_load_file et al. openssl_conf = openssl_conf_section</p><div class=highlight><pre><span></span><code>[openssl_conf_section]
-</code></pre></div><p># # Configuration module list alg_section = evp_sect oid_section = new_oids</p><div class=highlight><pre><span></span><code>[evp_sect]
-</code></pre></div><p># # This will have no effect as FIPS mode is off by default. # # Set to "yes" to enter FIPS mode, if supported fips_mode = no</p><div class=highlight><pre><span></span><code>[new_oids]
-</code></pre></div><p># # New OID, just short name newoid1 = 1.2.3.4.1 # # New OID shortname and long name newoid2 = New OID 2 long name, 1.2.3.4.2</p><p>The above examples can be used with with any application supporting library configuration if &quot;openssl_conf&quot; is modified to match the appropriate &quot;appname&quot;.</p><p>For example if the second sample file above is saved to &quot;example.cnf&quot; then the command line:</p><div class=highlight><pre><span></span><code>OPENSSL_CONF=example.cnf openssl asn1parse -genstr OID:1.2.3.4.1
+# The above value is used if TMP isn&#39;t in the environment
+TEMP=$ENV::TMP
+# The above value is used if TEMP isn&#39;t in the environment
+tmpfile=${ENV::TEMP}/tmp.filename
+</code></pre></div><p>Simple OpenSSL library configuration example to enter FIPS mode:</p><div class=highlight><pre><span></span><code># Default appname: should match &quot;appname&quot; parameter (if any)
+# supplied to CONF_modules_load_file et al.
+openssl_conf = openssl_conf_section
+
+[openssl_conf_section]
+# Configuration module list
+alg_section = evp_sect
+
+[evp_sect]
+# Set to &quot;yes&quot; to enter FIPS mode if supported
+fips_mode = yes
+</code></pre></div><p>Note: in the above example you will get an error in non FIPS capable versions of OpenSSL.</p><p>More complex OpenSSL library configuration. Add OID and don&#39;t enter FIPS mode:</p><div class=highlight><pre><span></span><code># Default appname: should match &quot;appname&quot; parameter (if any)
+# supplied to CONF_modules_load_file et al.
+openssl_conf = openssl_conf_section
+
+[openssl_conf_section]
+# Configuration module list
+alg_section = evp_sect
+oid_section = new_oids
+
+[evp_sect]
+# This will have no effect as FIPS mode is off by default.
+# Set to &quot;yes&quot; to enter FIPS mode, if supported
+fips_mode = no
+
+[new_oids]
+# New OID, just short name
+newoid1 = 1.2.3.4.1
+# New OID shortname and long name
+newoid2 = New OID 2 long name, 1.2.3.4.2
+</code></pre></div><p>The above examples can be used with with any application supporting library configuration if &quot;openssl_conf&quot; is modified to match the appropriate &quot;appname&quot;.</p><p>For example if the second sample file above is saved to &quot;example.cnf&quot; then the command line:</p><div class=highlight><pre><span></span><code>OPENSSL_CONF=example.cnf openssl asn1parse -genstr OID:1.2.3.4.1
 </code></pre></div><p>will output:</p><div class=highlight><pre><span></span><code>0:d=0  hl=2 l=   4 prim: OBJECT            :newoid1
 </code></pre></div><p>showing that the OID &quot;newoid1&quot; has been added as &quot;1.2.3.4.1&quot;.</p><h2 id=bugs>BUGS<a class=headerlink href=#bugs title="Permanent link">&para;</a></h2><p>Currently there is no way to include characters using the octal <strong>\nnn</strong> form. Strings are all null terminated so nulls cannot form part of the value.</p><p>The escaping isn&#39;t quite right: if you want to use sequences like <strong>\n</strong> you can&#39;t use any quote escaping on the same line.</p><p>Files are loaded in a single pass. This means that an variable expansion will only work if the variables referenced are defined earlier in the file.</p><h2 id=see-also>SEE ALSO<a class=headerlink href=#see-also title="Permanent link">&para;</a></h2><p><a href=../x509/ >x509(1)</a>, <a href=../req/ >req(1)</a>, <a href=../ca/ >ca(1)</a></p></article></div><script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script></div></main><footer class=md-footer><div class="md-footer-meta md-typeset"><div class="md-footer-meta__inner md-grid"><div class=md-copyright> Made with <a href=https://squidfunk.github.io/mkdocs-material/ target=_blank rel=noopener> Material for MkDocs </a></div></div></div></footer></div><div class=md-dialog data-md-component=dialog><div class="md-dialog__inner md-typeset"></div></div><script id=__config type=application/json>{"base": "../..", "features": ["navigation.indexes", "navigation.instant", "navigation.path", "navigation.prune", "navigation.tabs", "navigation.tabs.sticky", "navigation.tracking", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "master", "provider": "mike"}}</script><script src=../../assets/javascripts/bundle.ad660dcc.min.js></script></body></html>

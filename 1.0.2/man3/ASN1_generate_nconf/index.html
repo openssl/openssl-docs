@@ -50,5 +50,24 @@ E7B2458F
 
 coeff=INTEGER:0x30B9E4F2AFA5AC679F920FC83F1F2DF1BAF1779CF989447FABC2F5\
 628657053A
-</code></pre></div><p>This example is the corresponding public key in a SubjectPublicKeyInfo structure:</p><p># # Start with a SEQUENCE asn1=SEQUENCE:pubkeyinfo</p><p># # pubkeyinfo contains an algorithm identifier and the public key wrapped # # in a BIT STRING [pubkeyinfo] algorithm=SEQUENCE:rsa_alg pubkey=BITWRAP,SEQUENCE:rsapubkey</p><p># # algorithm ID for RSA is just an OID and a NULL [rsa_alg] algorithm=OID:rsaEncryption parameter=NULL</p><p># # Actual public key: modulus and exponent [rsapubkey] n=INTEGER:0xBB6FE79432CC6EA2D8F970675A5A87BFBE1AFF0BE63E879F2AFFB93644\ D4D2C6D000430DEC66ABF47829E74B8C5108623A1C0EE8BE217B3AD8D36D5EB4FCA1D9</p><div class=highlight><pre><span></span><code>e=INTEGER:0x010001
+</code></pre></div><p>This example is the corresponding public key in a SubjectPublicKeyInfo structure:</p><div class=highlight><pre><span></span><code># Start with a SEQUENCE
+asn1=SEQUENCE:pubkeyinfo
+
+# pubkeyinfo contains an algorithm identifier and the public key wrapped
+# in a BIT STRING
+[pubkeyinfo]
+algorithm=SEQUENCE:rsa_alg
+pubkey=BITWRAP,SEQUENCE:rsapubkey
+
+# algorithm ID for RSA is just an OID and a NULL
+[rsa_alg]
+algorithm=OID:rsaEncryption
+parameter=NULL
+
+# Actual public key: modulus and exponent
+[rsapubkey]
+n=INTEGER:0xBB6FE79432CC6EA2D8F970675A5A87BFBE1AFF0BE63E879F2AFFB93644\
+D4D2C6D000430DEC66ABF47829E74B8C5108623A1C0EE8BE217B3AD8D36D5EB4FCA1D9
+
+e=INTEGER:0x010001
 </code></pre></div><h2 id=return-values>RETURN VALUES<a class=headerlink href=#return-values title="Permanent link">&para;</a></h2><p>ASN1_generate_nconf() and ASN1_generate_v3() return the encoded data as an <strong>ASN1_TYPE</strong> structure or <strong>NULL</strong> if an error occurred.</p><p>The error codes that can be obtained by <a href=../ERR_get_error/ >ERR_get_error(3)</a>.</p><h2 id=see-also>SEE ALSO<a class=headerlink href=#see-also title="Permanent link">&para;</a></h2><p><a href=../ERR_get_error/ >ERR_get_error(3)</a></p><h2 id=history>HISTORY<a class=headerlink href=#history title="Permanent link">&para;</a></h2><p>ASN1_generate_nconf() and ASN1_generate_v3() were added to OpenSSL 0.9.8</p></article></div><script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script></div></main><footer class=md-footer><div class="md-footer-meta md-typeset"><div class="md-footer-meta__inner md-grid"><div class=md-copyright> Made with <a href=https://squidfunk.github.io/mkdocs-material/ target=_blank rel=noopener> Material for MkDocs </a></div></div></div></footer></div><div class=md-dialog data-md-component=dialog><div class="md-dialog__inner md-typeset"></div></div><script id=__config type=application/json>{"base": "../..", "features": ["navigation.indexes", "navigation.instant", "navigation.path", "navigation.prune", "navigation.tabs", "navigation.tabs.sticky", "navigation.tracking", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "master", "provider": "mike"}}</script><script src=../../assets/javascripts/bundle.ad660dcc.min.js></script></body></html>
