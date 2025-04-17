@@ -14,12 +14,12 @@
 </code></pre></div><p>There are four types of tokens:</p><ul><li><p>&lt;string&gt;</p><p>The name of a processor generation. A bit in the environment variable&#39;s mask is set to one if and only if the specified processor generation implements the corresponding instruction set extension. Possible values are <strong>z900</strong>, <strong>z990</strong>, <strong>z9</strong>, <strong>z10</strong>, <strong>z196</strong>, <strong>zEC12</strong>, <strong>z13</strong>, <strong>z14</strong>, <strong>z15</strong>, and <strong>z16</strong>.</p></li><li><p>&lt;string&gt;:&lt;mask&gt;:&lt;mask&gt;</p><p>The name of an instruction followed by two 64-bit masks. The part of the environment variable&#39;s mask corresponding to the specified instruction is set to the specified 128-bit mask. Possible values are <strong>kimd</strong>, <strong>klmd</strong>, <strong>km</strong>, <strong>kmc</strong>, <strong>kmac</strong>, <strong>kmctr</strong>, <strong>kmo</strong>, <strong>kmf</strong>, <strong>prno</strong>, <strong>kma</strong>, <strong>pcc</strong> and <strong>kdsa</strong>.</p></li><li><p>stfle:&lt;mask&gt;:&lt;mask&gt;:&lt;mask&gt;</p><p>Store-facility-list-extended (stfle) followed by three 64-bit masks. The part of the environment variable&#39;s mask corresponding to the stfle instruction is set to the specified 192-bit mask.</p></li><li><p>nocex</p><p>Deactivate modular exponentiation and CRT operation offloading to Crypto Express Adapters.</p></li></ul><p>The 64-bit masks are specified in hexadecimal notation. The 0x prefix is optional. Prefix a mask with a tilde, <code>~</code>, to denote a bitwise NOT operation.</p><p>The following is a list of significant bits for each instruction. Colon rows separate the individual 64-bit masks. The bit numbers in the first column are consistent with [1], that is, 0 denotes the leftmost bit and the numbering is continuous across 64-bit mask boundaries.</p><div class=highlight><pre><span></span><code>     Bit     Mask     Facility/Function
 
 stfle:
-  #   # 17    1&lt;&lt;46    message-security assist
-  #   # 25    1&lt;&lt;38    store-clock-fast facility
+     # 17    1&lt;&lt;46    message-security assist
+     # 25    1&lt;&lt;38    store-clock-fast facility
      :
-  #   # 76    1&lt;&lt;51    message-security assist extension 3
-  #   # 77    1&lt;&lt;50    message-security assist extension 4
-  #   # 86    1&lt;&lt;41    message-security-assist extension 12
+     # 76    1&lt;&lt;51    message-security assist extension 3
+     # 77    1&lt;&lt;50    message-security assist extension 4
+     # 86    1&lt;&lt;41    message-security-assist extension 12
      :
      #129    1&lt;&lt;62    vector facility
      #134    1&lt;&lt;57    vector packed decimal facility
@@ -28,98 +28,98 @@ stfle:
      #155    1&lt;&lt;36    message-security assist extension 9
 
 kimd :
-  #   #  1    1&lt;&lt;62    KIMD-SHA-1
-  #   #  2    1&lt;&lt;61    KIMD-SHA-256
-  #   #  3    1&lt;&lt;60    KIMD-SHA-512
-  #   # 32    1&lt;&lt;31    KIMD-SHA3-224
-  #   # 33    1&lt;&lt;30    KIMD-SHA3-256
-  #   # 34    1&lt;&lt;29    KIMD-SHA3-384
-  #   # 35    1&lt;&lt;28    KIMD-SHA3-512
-  #   # 36    1&lt;&lt;27    KIMD-SHAKE-128
-  #   # 37    1&lt;&lt;26    KIMD-SHAKE-256
+     #  1    1&lt;&lt;62    KIMD-SHA-1
+     #  2    1&lt;&lt;61    KIMD-SHA-256
+     #  3    1&lt;&lt;60    KIMD-SHA-512
+     # 32    1&lt;&lt;31    KIMD-SHA3-224
+     # 33    1&lt;&lt;30    KIMD-SHA3-256
+     # 34    1&lt;&lt;29    KIMD-SHA3-384
+     # 35    1&lt;&lt;28    KIMD-SHA3-512
+     # 36    1&lt;&lt;27    KIMD-SHAKE-128
+     # 37    1&lt;&lt;26    KIMD-SHAKE-256
      :
-  #   # 65    1&lt;&lt;62    KIMD-GHASH
+     # 65    1&lt;&lt;62    KIMD-GHASH
 
 klmd :
-  #   # 32    1&lt;&lt;31    KLMD-SHA3-224
-  #   # 33    1&lt;&lt;30    KLMD-SHA3-256
-  #   # 34    1&lt;&lt;29    KLMD-SHA3-384
-  #   # 35    1&lt;&lt;28    KLMD-SHA3-512
-  #   # 36    1&lt;&lt;27    KLMD-SHAKE-128
-  #   # 37    1&lt;&lt;26    KLMD-SHAKE-256
+     # 32    1&lt;&lt;31    KLMD-SHA3-224
+     # 33    1&lt;&lt;30    KLMD-SHA3-256
+     # 34    1&lt;&lt;29    KLMD-SHA3-384
+     # 35    1&lt;&lt;28    KLMD-SHA3-512
+     # 36    1&lt;&lt;27    KLMD-SHAKE-128
+     # 37    1&lt;&lt;26    KLMD-SHAKE-256
      :
 
 km   :
-  #   # 18    1&lt;&lt;45    KM-AES-128
-  #   # 19    1&lt;&lt;44    KM-AES-192
-  #   # 20    1&lt;&lt;43    KM-AES-256
-  #   # 50    1&lt;&lt;13    KM-XTS-AES-128
-  #   # 52    1&lt;&lt;11    KM-XTS-AES-256
+     # 18    1&lt;&lt;45    KM-AES-128
+     # 19    1&lt;&lt;44    KM-AES-192
+     # 20    1&lt;&lt;43    KM-AES-256
+     # 50    1&lt;&lt;13    KM-XTS-AES-128
+     # 52    1&lt;&lt;11    KM-XTS-AES-256
      :
-  #   # 82    1&lt;&lt;45    KM-XTS-AES-128-MSA10
-  #   # 84    1&lt;&lt;43    KM-XTS-AES-256-MSA10
+     # 82    1&lt;&lt;45    KM-XTS-AES-128-MSA10
+     # 84    1&lt;&lt;43    KM-XTS-AES-256-MSA10
 
 kmc  :
-  #   # 18    1&lt;&lt;45    KMC-AES-128
-  #   # 19    1&lt;&lt;44    KMC-AES-192
-  #   # 20    1&lt;&lt;43    KMC-AES-256
+     # 18    1&lt;&lt;45    KMC-AES-128
+     # 19    1&lt;&lt;44    KMC-AES-192
+     # 20    1&lt;&lt;43    KMC-AES-256
      :
 
 kmac :
-  #   # 18    1&lt;&lt;45    KMAC-AES-128
-  #   # 19    1&lt;&lt;44    KMAC-AES-192
-  #   # 20    1&lt;&lt;43    KMAC-AES-256
+     # 18    1&lt;&lt;45    KMAC-AES-128
+     # 19    1&lt;&lt;44    KMAC-AES-192
+     # 20    1&lt;&lt;43    KMAC-AES-256
      :
-  #   # 112   1&lt;&lt;15    KMAC-SHA-224
-  #   # 113   1&lt;&lt;14    KMAC-SHA-256
-  #   # 114   1&lt;&lt;13    KMAC-SHA-384
-  #   # 115   1&lt;&lt;12    KMAC-SHA-512
+     # 112   1&lt;&lt;15    KMAC-SHA-224
+     # 113   1&lt;&lt;14    KMAC-SHA-256
+     # 114   1&lt;&lt;13    KMAC-SHA-384
+     # 115   1&lt;&lt;12    KMAC-SHA-512
 
 kmctr:
      :
 
 kmo  :
-  #   # 18    1&lt;&lt;45    KMO-AES-128
-  #   # 19    1&lt;&lt;44    KMO-AES-192
-  #   # 20    1&lt;&lt;43    KMO-AES-256
+     # 18    1&lt;&lt;45    KMO-AES-128
+     # 19    1&lt;&lt;44    KMO-AES-192
+     # 20    1&lt;&lt;43    KMO-AES-256
      :
 
 kmf  :
-  #   # 18    1&lt;&lt;45    KMF-AES-128
-  #   # 19    1&lt;&lt;44    KMF-AES-192
-  #   # 20    1&lt;&lt;43    KMF-AES-256
+     # 18    1&lt;&lt;45    KMF-AES-128
+     # 19    1&lt;&lt;44    KMF-AES-192
+     # 20    1&lt;&lt;43    KMF-AES-256
      :
 
 prno :
      :
 
 kma  :
-  #   # 18    1&lt;&lt;45    KMA-GCM-AES-128
-  #   # 19    1&lt;&lt;44    KMA-GCM-AES-192
-  #   # 20    1&lt;&lt;43    KMA-GCM-AES-256
+     # 18    1&lt;&lt;45    KMA-GCM-AES-128
+     # 19    1&lt;&lt;44    KMA-GCM-AES-192
+     # 20    1&lt;&lt;43    KMA-GCM-AES-256
      :
 
 pcc  :
      :
-  #   # 64    1&lt;&lt;63    PCC-Scalar-Multiply-P256
-  #   # 65    1&lt;&lt;62    PCC-Scalar-Multiply-P384
-  #   # 66    1&lt;&lt;61    PCC-Scalar-Multiply-P521
-  #   # 72    1&lt;&lt;55    PCC-Scalar-Multiply-Ed25519
-  #   # 73    1&lt;&lt;54    PCC-Scalar-Multiply-Ed448
-  #   # 80    1&lt;&lt;47    PCC-Scalar-Multiply-X25519
-  #   # 81    1&lt;&lt;46    PCC-Scalar-Multiply-X448
+     # 64    1&lt;&lt;63    PCC-Scalar-Multiply-P256
+     # 65    1&lt;&lt;62    PCC-Scalar-Multiply-P384
+     # 66    1&lt;&lt;61    PCC-Scalar-Multiply-P521
+     # 72    1&lt;&lt;55    PCC-Scalar-Multiply-Ed25519
+     # 73    1&lt;&lt;54    PCC-Scalar-Multiply-Ed448
+     # 80    1&lt;&lt;47    PCC-Scalar-Multiply-X25519
+     # 81    1&lt;&lt;46    PCC-Scalar-Multiply-X448
 
 kdsa :
-  #   #  1    1&lt;&lt;62    KDSA-ECDSA-Verify-P256
-  #   #  2    1&lt;&lt;61    KDSA-ECDSA-Verify-P384
-  #   #  3    1&lt;&lt;60    KDSA-ECDSA-Verify-P521
-  #   #  9    1&lt;&lt;54    KDSA-ECDSA-Sign-P256
-  #   # 10    1&lt;&lt;53    KDSA-ECDSA-Sign-P384
-  #   # 11    1&lt;&lt;52    KDSA-ECDSA-Sign-P521
-  #   # 32    1&lt;&lt;31    KDSA-EdDSA-Verify-Ed25519
-  #   # 36    1&lt;&lt;27    KDSA-EdDSA-Verify-Ed448
-  #   # 40    1&lt;&lt;23    KDSA-EdDSA-Sign-Ed25519
-  #   # 44    1&lt;&lt;19    KDSA-EdDSA-Sign-Ed448
+     #  1    1&lt;&lt;62    KDSA-ECDSA-Verify-P256
+     #  2    1&lt;&lt;61    KDSA-ECDSA-Verify-P384
+     #  3    1&lt;&lt;60    KDSA-ECDSA-Verify-P521
+     #  9    1&lt;&lt;54    KDSA-ECDSA-Sign-P256
+     # 10    1&lt;&lt;53    KDSA-ECDSA-Sign-P384
+     # 11    1&lt;&lt;52    KDSA-ECDSA-Sign-P521
+     # 32    1&lt;&lt;31    KDSA-EdDSA-Verify-Ed25519
+     # 36    1&lt;&lt;27    KDSA-EdDSA-Verify-Ed448
+     # 40    1&lt;&lt;23    KDSA-EdDSA-Sign-Ed25519
+     # 44    1&lt;&lt;19    KDSA-EdDSA-Sign-Ed448
      :
 </code></pre></div><h2 id=return-values>RETURN VALUES<a class=headerlink href=#return-values title="Permanent link">&para;</a></h2><p>Not available.</p><h2 id=examples>EXAMPLES<a class=headerlink href=#examples title="Permanent link">&para;</a></h2><p>Disables all instruction set extensions which the z196 processor does not implement:</p><div class=highlight><pre><span></span><code>OPENSSL_s390xcap=&quot;z196&quot;
 </code></pre></div><p>Disables the vector facility:</p><div class=highlight><pre><span></span><code>OPENSSL_s390xcap=&quot;stfle:~0:~0:~0x4000000000000000&quot;
