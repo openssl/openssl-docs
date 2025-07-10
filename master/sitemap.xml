@@ -4066,6 +4066,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://docs.openssl.org/master/man7/EVP_PKEY-LMS/</loc>
+         <lastmod>2025-07-10</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://docs.openssl.org/master/man7/EVP_PKEY-ML-DSA/</loc>
          <lastmod>2025-07-10</lastmod>
          <changefreq>daily</changefreq>
@@ -4152,6 +4157,11 @@
     </url>
     <url>
          <loc>https://docs.openssl.org/master/man7/EVP_SIGNATURE-HMAC/</loc>
+         <lastmod>2025-07-10</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://docs.openssl.org/master/man7/EVP_SIGNATURE-LMS/</loc>
          <lastmod>2025-07-10</lastmod>
          <changefreq>daily</changefreq>
     </url>
