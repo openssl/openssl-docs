@@ -42,8 +42,8 @@ opts = SSL_OP_IGNORE_UNEXPECTED_EOF;
 opts |= SSL_OP_NO_RENEGOTIATION;
 
 /*
- * Most servers elect to use their own cipher or group preference rather than
- * that of the client.
+ * Most servers elect to use their own cipher, group or signature preference
+ * rather than that of the client.
  */
 opts |= SSL_OP_SERVER_PREFERENCE;
 
