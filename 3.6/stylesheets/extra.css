@@ -1,0 +1,28 @@
+.md-ellipsis-custom {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+[data-md-color-scheme="openssl"] {
+  --md-primary-fg-color: #f6f6f6;
+  --md-primary-bg-color: #731513;
+  --md-accent-fg-color: #9d5b59;
+  --md-accent-bg-color: #731513;
+  --md-typeset-a-color: var(--md-accent-bg-color);
+}
+
+.md-header--shadow {
+  box-shadow: none;
+}
+
+.md-typeset {
+  font-weight: 300;
+}
+
+.md-typeset a {
+  font-weight: 400;
+}
+
+.md-search__form:hover {
+  background-color: #00000064;
+}
