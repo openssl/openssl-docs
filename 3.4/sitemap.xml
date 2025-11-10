@@ -741,6 +741,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://docs.openssl.org/3.4/man3/CMS_EncryptedData_set1_key/</loc>
+         <lastmod>2025-11-10</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://docs.openssl.org/3.4/man3/CMS_EnvelopedData_create/</loc>
          <lastmod>2025-11-10</lastmod>
          <changefreq>daily</changefreq>
