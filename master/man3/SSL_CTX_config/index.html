@@ -13,29 +13,48 @@
 
 int SSL_CTX_config(SSL_CTX *ctx, const char *name);
 int SSL_config(SSL *s, const char *name);
-</code></pre></div><h2 id=description>DESCRIPTION<a class=headerlink href=#description title="Permanent link">&para;</a></h2><p>The functions SSL_CTX_config() and SSL_config() configure an <strong>SSL_CTX</strong> or <strong>SSL</strong> structure using the configuration <strong>name</strong>.</p><p>By calling SSL_CTX_config() or SSL_config() an application can perform many complex tasks based on the contents of the configuration file: greatly simplifying application configuration code. A degree of future proofing can also be achieved: an application can support configuration features in newer versions of OpenSSL automatically.</p><p>A configuration file must have been previously loaded, for example using CONF_modules_load_file(). See <a href=../../man5/config/ >config(5)</a> for details of the configuration file syntax.</p><h2 id=return-values>RETURN VALUES<a class=headerlink href=#return-values title="Permanent link">&para;</a></h2><p>SSL_CTX_config() and SSL_config() return 1 for success or 0 if an error occurred.</p><h2 id=examples>EXAMPLES<a class=headerlink href=#examples title="Permanent link">&para;</a></h2><p>If the file &quot;config.cnf&quot; contains the following:</p><div class=highlight><pre><span></span><code>testapp = test_sect
+</code></pre></div><h2 id=description>DESCRIPTION<a class=headerlink href=#description title="Permanent link">&para;</a></h2><p>The functions SSL_CTX_config() and SSL_config() apply additional configuration settings to an <strong>SSL_CTX</strong> or <strong>SSL</strong> structure using the configuration <strong>name</strong>. The <strong>name</strong> must match a parameter in the configuration file&#39;s <strong>ssl</strong> module section, whose value is the name of another section with SSL configuration commands. See <a href=../SSL_CONF_cmd/ >SSL_CONF_cmd(3)</a> for a description of the available commands.</p><p>By calling SSL_CTX_config() or SSL_config() an application can perform many complex tasks based on the contents of the configuration file: greatly simplifying application configuration code. Some future-proofing can be attained this way: the specified configuration section can specify settings supported by the run-time version of OpenSSL that were not known at the time the application code was written.</p><p>A configuration file must have been previously loaded, for example using CONF_modules_load_file(3). See <a href=../../man5/config/ >config(5)</a> for details of the configuration file syntax. In most applications the default <strong>openssl.cnf</strong> file is loaded automatically as part of library initialisation.</p><h2 id=return-values>RETURN VALUES<a class=headerlink href=#return-values title="Permanent link">&para;</a></h2><p>SSL_CTX_config() and SSL_config() return 1 for success or 0 if an error occurred.</p><h2 id=examples>EXAMPLES<a class=headerlink href=#examples title="Permanent link">&para;</a></h2><p>If, for example, the loaded configuration file contains the following:</p><div class=highlight><pre><span></span><code># Top level &quot;default&quot; section, if no application name was specified as part
+# initialisation, it defaults to &quot;openssl_conf&quot;.
+openssl_conf = openssl_init
 
-[test_sect]
-# list of configuration modules
+[openssl_init]
+# SSL module initialisation
+ssl_conf = ssl_init
 
-ssl_conf = ssl_sect
+[ssl_init]
+system_default = default_ssl_settings
+tweaks_for_tls12 = tls12_custom_settings
+tweaks_for_tls13 = tls13_custom_settings
 
-[ssl_sect]
-server = server_section
+[default_ssl_settings]
+MinProtocol = TLSv1.2
+# Defaults are typically the wisest choice, override only with good cause.
+MinProtocol = ...
+Ciphers = ...
+Groups = ...
+SignatureAlgorithms = ...
 
-[server_section]
-RSA.Certificate = server-rsa.pem
-ECDSA.Certificate = server-ecdsa.pem
-Ciphers = ALL:!RC4
-</code></pre></div><p>An application could call:</p><div class=highlight><pre><span></span><code>if (CONF_modules_load_file(&quot;config.cnf&quot;, &quot;testapp&quot;, 0) &lt;= 0) {
-    fprintf(stderr, &quot;Error processing config file\n&quot;);
+[tls12_custom_settings]
+# Defaults are typically the wisest choice, override only with good cause.
+MaxProtocol = TLSv1.2
+...
+
+[tls13_custom_settings]
+# Defaults are typically the wisest choice, override only with good cause.
+MinProtocol = TLSv1.3
+...
+</code></pre></div><p>An application that wants to only use &quot;TLS 1.2&quot; might call:</p><div class=highlight><pre><span></span><code>/* Initialised per &quot;system_default&quot; settings */
+if ((ctx = SSL_CTX_new(TLS_server_method())) == NULL) {
+    fprintf(stderr, &quot;Error creating the SSL context.\n&quot;);
     goto err;
 }
 
-ctx = SSL_CTX_new(TLS_server_method());
-
-if (SSL_CTX_config(ctx, &quot;server&quot;) == 0) {
-    fprintf(stderr, &quot;Error configuring server.\n&quot;);
+/*
+ * Further tweaks per the &quot;ssl&quot; module &quot;tweaks_for_tls12&quot; setting, i.e. the
+ * configuration file&#39;s &quot;tls12_custom_settings&quot; section.
+ */
+if (SSL_CTX_config(ctx, &quot;tweaks_for_tls12&quot;) == 0) {
+    fprintf(stderr, &quot;Error applying &#39;tweaks_for_tls12&#39; context configuration.\n&quot;);
     goto err;
 }
-</code></pre></div><p>In this example two certificates and the cipher list are configured without the need for any additional application code.</p><h2 id=see-also>SEE ALSO<a class=headerlink href=#see-also title="Permanent link">&para;</a></h2><p><a href=../../man7/ossl-guide-libssl-introduction/ >ssl(7)</a>, <a href=../../man5/config/ >config(5)</a>, <a href=../SSL_CONF_cmd/ >SSL_CONF_cmd(3)</a>, <a href=../CONF_modules_load_file/ >CONF_modules_load_file(3)</a></p><h2 id=history>HISTORY<a class=headerlink href=#history title="Permanent link">&para;</a></h2><p>The SSL_CTX_config() and SSL_config() functions were added in OpenSSL 1.1.0.</p><h2 id=copyright>COPYRIGHT<a class=headerlink href=#copyright title="Permanent link">&para;</a></h2><p>Copyright 2015-2020 The OpenSSL Project Authors. All Rights Reserved.</p><p>Licensed under the Apache License 2.0 (the &quot;License&quot;). You may not use this file except in compliance with the License. You can obtain a copy in the file LICENSE in the source distribution or at <a href=https://www.openssl.org/source/license.html>https://www.openssl.org/source/license.html</a>.</p></article></div><script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script></div></main><footer class=md-footer><div class="md-footer-meta md-typeset"><div class="md-footer-meta__inner md-grid"><div class=md-copyright> Made with <a href=https://squidfunk.github.io/mkdocs-material/ target=_blank rel=noopener> Material for MkDocs </a></div></div></div></footer></div><div class=md-dialog data-md-component=dialog><div class="md-dialog__inner md-typeset"></div></div><script id=__config type=application/json>{"base": "../..", "features": ["navigation.indexes", "navigation.instant", "navigation.path", "navigation.prune", "navigation.tabs", "navigation.tabs.sticky", "navigation.tracking", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "master", "provider": "mike"}}</script><script src=../../assets/javascripts/bundle.ad660dcc.min.js></script></body></html>
+</code></pre></div><p>The setting of the protocol version ceiling and any other settings relevant to TLS 1.2 are in the configuration file, and don&#39;t need to be hard-coded in the application. Similarly, using <code>tweaks_for_tls13</code> as the configuration <strong>name</strong> applies the corresponding settings from the &quot;tls13_custom_settings&quot; section (per the SSL module <code>tweaks_for_tls13</code> parameter).</p><h2 id=see-also>SEE ALSO<a class=headerlink href=#see-also title="Permanent link">&para;</a></h2><p><a href=../../man7/ossl-guide-libssl-introduction/ >ssl(7)</a>, <a href=../../man5/config/ >config(5)</a>, <a href=../SSL_CONF_cmd/ >SSL_CONF_cmd(3)</a>, <a href=../SSL_CTX_new/ >SSL_CTX_new(3)</a>, <a href=../CONF_modules_load_file/ >CONF_modules_load_file(3)</a>, <a href=../OPENSSL_init_ssl/ >OPENSSL_init_ssl(3)</a></p><h2 id=history>HISTORY<a class=headerlink href=#history title="Permanent link">&para;</a></h2><p>The SSL_CTX_config() and SSL_config() functions were added in OpenSSL 1.1.0.</p><h2 id=copyright>COPYRIGHT<a class=headerlink href=#copyright title="Permanent link">&para;</a></h2><p>Copyright 2015-2020 The OpenSSL Project Authors. All Rights Reserved.</p><p>Licensed under the Apache License 2.0 (the &quot;License&quot;). You may not use this file except in compliance with the License. You can obtain a copy in the file LICENSE in the source distribution or at <a href=https://www.openssl.org/source/license.html>https://www.openssl.org/source/license.html</a>.</p></article></div><script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script></div></main><footer class=md-footer><div class="md-footer-meta md-typeset"><div class="md-footer-meta__inner md-grid"><div class=md-copyright> Made with <a href=https://squidfunk.github.io/mkdocs-material/ target=_blank rel=noopener> Material for MkDocs </a></div></div></div></footer></div><div class=md-dialog data-md-component=dialog><div class="md-dialog__inner md-typeset"></div></div><script id=__config type=application/json>{"base": "../..", "features": ["navigation.indexes", "navigation.instant", "navigation.path", "navigation.prune", "navigation.tabs", "navigation.tabs.sticky", "navigation.tracking", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "master", "provider": "mike"}}</script><script src=../../assets/javascripts/bundle.ad660dcc.min.js></script></body></html>
