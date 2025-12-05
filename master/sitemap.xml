@@ -4411,6 +4411,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://docs.openssl.org/master/man7/ossl-removed-api/</loc>
+         <lastmod>2025-12-05</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://docs.openssl.org/master/man7/ossl_store-file/</loc>
          <lastmod>2025-12-05</lastmod>
          <changefreq>daily</changefreq>
