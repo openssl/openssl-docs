@@ -16,4 +16,3 @@ migrating existing applications to OpenSSL 3.0 are available in the
 Information related to the OpenSSL FIPS Validation [FIPS 140-2 validation](fips.md) is also
 available.
 
-[![OpenSSL Conference 2025](images/openssl-conference-banner.jpg "OpenSSL Conference 2025")](https://openssl-conference.org)
