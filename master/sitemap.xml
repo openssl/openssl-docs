@@ -1166,11 +1166,6 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://docs.openssl.org/master/man3/EVP_CIPHER_meth_new/</loc>
-         <lastmod>2025-12-12</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
          <loc>https://docs.openssl.org/master/man3/EVP_DigestInit/</loc>
          <lastmod>2025-12-12</lastmod>
          <changefreq>daily</changefreq>
