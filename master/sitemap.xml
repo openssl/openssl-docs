@@ -1241,11 +1241,6 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://docs.openssl.org/master/man3/EVP_PKEY_ASN1_METHOD/</loc>
-         <lastmod>2026-01-09</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
          <loc>https://docs.openssl.org/master/man3/EVP_PKEY_CTX_ctrl/</loc>
          <lastmod>2026-01-09</lastmod>
          <changefreq>daily</changefreq>
@@ -1297,11 +1292,6 @@
     </url>
     <url>
          <loc>https://docs.openssl.org/master/man3/EVP_PKEY_CTX_set_tls1_prf_md/</loc>
-         <lastmod>2026-01-09</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://docs.openssl.org/master/man3/EVP_PKEY_asn1_get_count/</loc>
          <lastmod>2026-01-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
