@@ -3851,6 +3851,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://docs.openssl.org/master/man7/EVP_KDF-SRTPKDF/</loc>
+         <lastmod>2026-01-23</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://docs.openssl.org/master/man7/EVP_KDF-SS/</loc>
          <lastmod>2026-01-23</lastmod>
          <changefreq>daily</changefreq>
