@@ -1166,6 +1166,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://docs.openssl.org/3.6/man3/EVP_CIPHER_CTX_get_app_data/</loc>
+         <lastmod>2026-01-23</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://docs.openssl.org/3.6/man3/EVP_CIPHER_CTX_get_cipher_data/</loc>
          <lastmod>2026-01-23</lastmod>
          <changefreq>daily</changefreq>
