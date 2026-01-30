@@ -11,10 +11,6 @@ on:
 permissions:
   contents: write
 
-concurrency:
-  group: deploy-gh-pages
-  cancel-in-progress: false
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -37,4 +33,4 @@ jobs:
           git config user.name openssl-machine
           git config user.email openssl-machine@openssl.org
           git switch gh-pages
-          git push --force-with-lease origin gh-pages
+          until git push origin gh-pages; do git pull --rebase origin gh-pages; done
