@@ -128,7 +128,7 @@ int provider_self_test(void *provctx);
     (OSSL_FUNC_core_gettable_params_fn)(const OSSL_CORE_HANDLE *handle);
 static ossl_inline OSSL_NAME_core_gettable_params_fn
     OSSL_FUNC_core_gettable_params(const OSSL_DISPATCH *opf);
-</code></pre></div><p><a href=../../man3/OSSL_DISPATCH/ >OSSL_DISPATCH(3)</a> arrays are indexed by numbers that are provided as macros in <a href=../openssl-core_dispatch.h/ >openssl-core_dispatch.h(7)</a>, as follows:</p><p>For <em>in</em> (the <a href=../../man3/OSSL_DISPATCH/ >OSSL_DISPATCH(3)</a> array passed from <code>libcrypto</code> to the provider):</p><div class=highlight><pre><span></span><code>core_gettable_params           OSSL_FUNC_CORE_GETTABLE_PARAMS
+</code></pre></div><p><a href=../../man3/OSSL_DISPATCH/ >OSSL_DISPATCH(3)</a> array entries contain a <em>function_id</em> field that identifies the function. The <em>function_id</em> numbers are provided as macros in <a href=../openssl-core_dispatch.h/ >openssl-core_dispatch.h(7)</a>, as follows:</p><p>For <em>in</em> (the <a href=../../man3/OSSL_DISPATCH/ >OSSL_DISPATCH(3)</a> array passed from <code>libcrypto</code> to the provider):</p><div class=highlight><pre><span></span><code>core_gettable_params           OSSL_FUNC_CORE_GETTABLE_PARAMS
 core_get_params                OSSL_FUNC_CORE_GET_PARAMS
 core_thread_start              OSSL_FUNC_CORE_THREAD_START
 core_get_libctx                OSSL_FUNC_CORE_GET_LIBCTX
