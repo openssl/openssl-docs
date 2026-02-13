@@ -53,11 +53,11 @@ X509_ATTRIBUTE *X509_ATTRIBUTE_create_by_txt(X509_ATTRIBUTE **attr,
 int X509_ATTRIBUTE_set1_object(X509_ATTRIBUTE *attr, const ASN1_OBJECT *obj);
 int X509_ATTRIBUTE_set1_data(X509_ATTRIBUTE *attr, int attrtype,
                              const void *data, int len);
-void *X509_ATTRIBUTE_get0_data(X509_ATTRIBUTE *attr, int idx, int atrtype,
-                               void *data);
+const void *X509_ATTRIBUTE_get0_data(const X509_ATTRIBUTE *attr, int idx,
+                                     int atrtype, void *data);
 int X509_ATTRIBUTE_count(const X509_ATTRIBUTE *attr);
-ASN1_OBJECT *X509_ATTRIBUTE_get0_object(X509_ATTRIBUTE *attr);
-ASN1_TYPE *X509_ATTRIBUTE_get0_type(X509_ATTRIBUTE *attr, int idx);
+const ASN1_OBJECT *X509_ATTRIBUTE_get0_object(const X509_ATTRIBUTE *attr);
+const ASN1_TYPE *X509_ATTRIBUTE_get0_type(const X509_ATTRIBUTE *attr, int idx);
 </code></pre></div><h2 id=description>DESCRIPTION<a class=headerlink href=#description title="Permanent link">&para;</a></h2><p><strong>X509_ATTRIBUTE</strong> objects are used by many standards including X509, X509_REQ, PKCS12, PKCS8, PKCS7 and CMS.</p><p>The <strong>X509_ATTRIBUTE</strong> object is used to represent the ASN.1 Attribute as defined in RFC 5280, i.e.</p><div class=highlight><pre><span></span><code>Attribute ::= SEQUENCE {
   type             AttributeType,
   values    SET OF AttributeValue }
