@@ -101,6 +101,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://docs.openssl.org/master/man1/openssl-ech/</loc>
+         <lastmod>2026-02-20</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://docs.openssl.org/master/man1/openssl-ecparam/</loc>
          <lastmod>2026-02-20</lastmod>
          <changefreq>daily</changefreq>
@@ -3202,6 +3207,11 @@
     </url>
     <url>
          <loc>https://docs.openssl.org/master/man3/SSL_session_reused/</loc>
+         <lastmod>2026-02-20</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://docs.openssl.org/master/man3/SSL_set1_echstore/</loc>
          <lastmod>2026-02-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
