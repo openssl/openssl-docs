@@ -36,7 +36,7 @@ X509_STORE_CTX_verify_cb X509_STORE_get_verify_cb(const X509_STORE_CTX *ctx);
 void X509_STORE_set_verify(X509_STORE *xs, X509_STORE_CTX_verify_fn verify);
 X509_STORE_CTX_verify_fn X509_STORE_CTX_get_verify(const X509_STORE_CTX *ctx);
 
-int X509_STORE_CTX_get1_issuer(X509 **issuer, X509_STORE_CTX *ctx, X509 *x);
+int X509_STORE_CTX_get1_issuer(X509 **issuer, X509_STORE_CTX *ctx, const X509 *x);
 X509_STORE_CTX_get_issuer_fn X509_STORE_get_get_issuer(const X509_STORE_CTX *ctx);
 void X509_STORE_set_get_issuer(X509_STORE *xs,
                                X509_STORE_CTX_get_issuer_fn get_issuer);
