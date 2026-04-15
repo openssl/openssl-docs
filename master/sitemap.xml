@@ -351,6 +351,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://docs.openssl.org/master/man3/ASN1_BIT_STRING_new/</loc>
+         <lastmod>2026-04-15</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://docs.openssl.org/master/man3/ASN1_EXTERN_FUNCS/</loc>
          <lastmod>2026-04-15</lastmod>
          <changefreq>daily</changefreq>
