@@ -1201,6 +1201,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://docs.openssl.org/master/man3/EVP_EC_gen/</loc>
+         <lastmod>2026-05-06</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://docs.openssl.org/master/man3/EVP_EncodeInit/</loc>
          <lastmod>2026-05-06</lastmod>
          <changefreq>daily</changefreq>
