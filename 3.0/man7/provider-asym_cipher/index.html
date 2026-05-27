@@ -39,9 +39,9 @@ int OSSL_FUNC_asym_cipher_decrypt(void *ctx, unsigned char *out, size_t *outlen,
 
 /* Asymmetric Cipher parameters */
 int OSSL_FUNC_asym_cipher_get_ctx_params(void *ctx, OSSL_PARAM params[]);
-const OSSL_PARAM *OSSL_FUNC_asym_cipher_gettable_ctx_params(void *provctx);
+const OSSL_PARAM *OSSL_FUNC_asym_cipher_gettable_ctx_params(void *ctx, void *provctx);
 int OSSL_FUNC_asym_cipher_set_ctx_params(void *ctx, const OSSL_PARAM params[]);
-const OSSL_PARAM *OSSL_FUNC_asym_cipher_settable_ctx_params(void *provctx);
+const OSSL_PARAM *OSSL_FUNC_asym_cipher_settable_ctx_params(void *ctx, void *provctx);
 </code></pre></div><h2 id=description>DESCRIPTION<a class=headerlink href=#description title="Permanent link">&para;</a></h2><p>This documentation is primarily aimed at provider authors. See <a href=../provider/ >provider(7)</a> for further information.</p><p>The asymmetric cipher (OSSL_OP_ASYM_CIPHER) operation enables providers to implement asymmetric cipher algorithms and make them available to applications via the API functions <a href=../../man3/EVP_PKEY_encrypt/ >EVP_PKEY_encrypt(3)</a>, <a href=../../man3/EVP_PKEY_decrypt/ >EVP_PKEY_decrypt(3)</a> and other related functions).</p><p>All &quot;functions&quot; mentioned here are passed as function pointers between <code>libcrypto</code> and the provider in <a href=../../man3/OSSL_DISPATCH/ >OSSL_DISPATCH(3)</a> arrays via <a href=../../man3/OSSL_ALGORITHM/ >OSSL_ALGORITHM(3)</a> arrays that are returned by the provider&#39;s provider_query_operation() function (see <a href=../provider-base/ >&quot;Provider Functions&quot; in provider-base(7)</a>).</p><p>All these &quot;functions&quot; have a corresponding function type definition named <strong>OSSL_FUNC_{name}_fn</strong>, and a helper function to retrieve the function pointer from an <a href=../../man3/OSSL_DISPATCH/ >OSSL_DISPATCH(3)</a> element named <strong>OSSL_FUNC_{name}</strong>. For example, the &quot;function&quot; OSSL_FUNC_asym_cipher_newctx() has these:</p><div class=highlight><pre><span></span><code>typedef void *(OSSL_FUNC_asym_cipher_newctx_fn)(void *provctx);
 static ossl_inline OSSL_FUNC_asym_cipher_newctx_fn
     OSSL_FUNC_asym_cipher_newctx(const OSSL_DISPATCH *opf);
