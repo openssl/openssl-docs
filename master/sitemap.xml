@@ -3706,12 +3706,7 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://docs.openssl.org/master/man3/i2d_CMS_bio_stream/</loc>
-         <lastmod>2026-08-18</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://docs.openssl.org/master/man3/i2d_PKCS7_bio_stream/</loc>
+         <loc>https://docs.openssl.org/master/man3/i2d_ASN1_bio_stream/</loc>
          <lastmod>2026-08-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
