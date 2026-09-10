@@ -10,6 +10,7 @@ on:
 
 permissions:
   contents: write
+  packages: read
 
 concurrency:
   group: deploy-${{ github.event.inputs.branch }}
@@ -24,10 +25,12 @@ jobs:
         run: git fetch origin gh-pages --depth=1
       - name: "Set permissions"
         run: chmod -R a+rwX $(pwd)
+      - name: "Login to the container registry"
+        run: podman login -u="${{ github.actor }}" -p="${{ secrets.GITHUB_TOKEN }}" ghcr.io
       - name: "Build site"
         run: |
           podman run -it -v $(pwd):/mnt -w /mnt --userns=keep-id \
-                 quay.io/openssl-ci/docs:20250205-075722 sh -c "\
+                 ghcr.io/openssl/openssl-docs:latest sh -c "\
                    git config --global --add safe.directory /mnt && \
                    python build.py ${{ github.event.inputs.branch }}"
       - name: "Fix ownership"

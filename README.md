@@ -20,7 +20,10 @@ Actions workflow.
 
 ## Local development
 
-All required dependencies are packed into a container image `quay.io/openssl-ci/docs`.
+All required dependencies are packed into a container image `ghcr.io/openssl/openssl-docs`, built
+from the `Containerfile` by the
+[Build and deploy container image](https://github.com/openssl/openssl-docs/actions/workflows/deploy-image.yaml)
+GitHub Actions workflow.
 To start playing around you can spin up a container and run commands:
 
 1. Clone the repository:
@@ -32,7 +35,7 @@ To start playing around you can spin up a container and run commands:
 2. Run the container:
 
     ```sh
-    podman run -it -v $(pwd)/openssl-docs:/mnt -w /mnt -p 8000:8000 --userns=keep-id quay.io/openssl-ci/docs:latest bash
+    podman run -it -v $(pwd)/openssl-docs:/mnt -w /mnt -p 8000:8000 --userns=keep-id ghcr.io/openssl/openssl-docs:latest bash
     ```
 
 3. Build the docs:

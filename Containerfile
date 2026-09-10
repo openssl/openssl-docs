@@ -17,6 +17,8 @@ RUN python3 -m venv /docs_venv && \
 
 FROM docker.io/library/pypy:3.11-slim-bookworm
 
+LABEL org.opencontainers.image.source=https://github.com/openssl/openssl-docs
+
 RUN apt-get update && \
     apt-get install -y --no-install-recommends cpanminus gcc git make && \
     cpanm Pod::Markdown@3.400 && \
