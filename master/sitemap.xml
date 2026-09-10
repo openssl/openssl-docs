@@ -3381,6 +3381,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://docs.openssl.org/master/man3/X509V3_EXT_nconf_nid/</loc>
+         <lastmod>2026-09-10</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://docs.openssl.org/master/man3/X509V3_EXT_print/</loc>
          <lastmod>2026-09-10</lastmod>
          <changefreq>daily</changefreq>
