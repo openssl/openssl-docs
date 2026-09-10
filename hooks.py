@@ -4,7 +4,7 @@ import re
 import shutil
 from pathlib import Path
 
-import htmlmin
+import minify_html
 from mkdocs import plugins
 from mkdocs.config.defaults import MkDocsConfig
 from mkdocs.structure.files import Files
@@ -154,7 +154,7 @@ def on_nav(nav: Navigation, config: MkDocsConfig, files: Files) -> Navigation:
 
 
 def on_post_page(output: str, page: Page, config: MkDocsConfig) -> str:
-    return htmlmin.minify(output, remove_comments=True, remove_empty_space=True)
+    return minify_html.minify(output)
 
 
 def on_post_build(config: MkDocsConfig):
