@@ -6,6 +6,25 @@ import sys
 import tempfile
 from pathlib import Path
 
+# pod2markdown keeps the line wrapping of the POD source inside inline code spans (C<...>) and
+# backslash-escapes markdown punctuation that ends up at the start of a wrapped line. Material
+# renders inline code with `white-space: pre-wrap`, so the wrap shows up as a line break and the
+# backslash is displayed literally. Such spans are joined back into a single line.
+INLINE_CODE_SPAN = re.compile(r"(?<!`)(`+)(?!`)(.+?)(?<!`)\1(?!`)", flags=re.S)
+WRAPPED_LINE = re.compile(r"\n[ \t]*(?:\\(?=[-+*#>|]))?")
+
+
+def join_inline_code_span(match: re.Match) -> str:
+    ticks, body = match.groups()
+    if "\n\n" in body:
+        # inline code spans never contain blank lines; this matched across paragraphs
+        return match.group()
+    return f"{ticks}{WRAPPED_LINE.sub(' ', body)}{ticks}"
+
+
+def join_inline_code_spans(markdown: str) -> str:
+    return INLINE_CODE_SPAN.sub(join_inline_code_span, markdown)
+
 
 def get_version_from_branch(branch: str) -> str:
     if branch == "master":
@@ -70,12 +89,13 @@ def convert_pod_to_md(tmp_dir: str):
         if "internal" in pod.parent.parts:
             continue
         target = f"docs/{dir_map[pod.parent.name]}/{pod.stem}.md"
-        ps = subprocess.run(["pod2markdown",
-                             "--html-encode-chars", "1",
-                             "--man-url-prefix", "../../man",
-                             str(pod), target])
+        ps = subprocess.run(
+            ["pod2markdown", "--html-encode-chars", "1", "--man-url-prefix", "../../man", str(pod), target]
+        )
         if ps.returncode != 0:
             raise SystemExit(ps.returncode)
+        markdown = Path(target).read_text(encoding="utf-8")
+        Path(target).write_text(join_inline_code_spans(markdown), encoding="utf-8")
 
 
 def copy_images(tmp_dir: str):
