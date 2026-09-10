@@ -1,3 +1,4 @@
+import logging
 import os
 import re
 import shutil
@@ -11,12 +12,16 @@ from mkdocs.structure.nav import Link
 from mkdocs.structure.nav import Navigation
 from mkdocs.structure.pages import Page
 
+log = logging.getLogger("mkdocs.hooks")
+
 MAN_INDEXES = ["man1/index.md", "man3/index.md", "man5/index.md", "man7/index.md"]
 SKIP_FILES = ["index.md", "fips.md", "OpenSSL300Design.md", "OpenSSLStrategicArchitecture.md"]
-LINKS_PATTERN = re.compile(r"\.\.\/\.\.\/man[1,3,5,7]{1}\/[a-zA-Z0-9_\-.]+")
+LINKS_PATTERN = re.compile(r"\.\.\/\.\.\/man[1357]\/[a-zA-Z0-9_\-.]+")
 HEADINGS_PATTERN = re.compile(r"^(#{1,6})((?=\s)[^\n]*?|[^\n\S]*)(?:(?<=\s)(?<!\\)#+)?[^\n\S]*$\n?", flags=re.M)
 LINKS_MAP = {}
 REDIRECT_PAGES = {}
+# src_uri -> (man_dir, names, description); parsed once in on_files and reused by the index and nav builders
+MAN_PAGES: dict[str, tuple[str, list[str], str]] = {}
 
 
 def get_names_paragraph(content: str) -> str:
@@ -33,15 +38,19 @@ def get_names_paragraph(content: str) -> str:
     return " ".join(paragraph_lines)
 
 
-def get_names(content: str) -> list[str]:
-    names_paragraph = get_names_paragraph(content)
-    names = names_paragraph.replace("\\", "").strip().replace("\n", " ").split(" - ")[0].strip().split(",")
-    return [name for name in names if name.strip()]
+def parse_name_section(content: str, src_uri: str) -> tuple[list[str], str]:
+    """Return the names and the description from the NAME section: "name1, name2 - description".
 
-
-def get_description(content: str) -> str:
-    names_paragraph = get_names_paragraph(content)
-    return names_paragraph.replace("\\", "").strip().replace("\n", " ").split(" - ")[1].strip()
+    Names are normalised the way they appear in links, e.g. "openssl/core_dispatch.h" becomes
+    "openssl-core_dispatch.h". A page without a " - " separator yields an empty description and a
+    warning instead of failing the whole build.
+    """
+    paragraph = get_names_paragraph(content).replace("\\", "").strip()
+    names_part, separator, description = paragraph.partition(" - ")
+    if not separator:
+        log.warning(f"{src_uri}: NAME section has no ' - ' separator, description will be empty")
+    names = [name.strip().replace("/", "-") for name in names_part.split(",")]
+    return [name for name in names if name], description.strip()
 
 
 def on_pre_build(config: MkDocsConfig) -> None:
@@ -52,11 +61,10 @@ def on_files(files: Files, config: MkDocsConfig) -> Files | None:
     for man_file in files.documentation_pages():
         if man_file.src_uri in SKIP_FILES + MAN_INDEXES:
             continue
-        man_dir = Path(man_file.src_uri).parent
-        names = get_names(man_file.content_string)
+        man_dir = Path(man_file.src_uri).parent.name
+        names, description = parse_name_section(man_file.content_string, man_file.src_uri)
+        MAN_PAGES[man_file.src_uri] = (man_dir, names, description)
         for name in names:
-            # e.g. "openssl/core_dispatch.h" to "openssl-core_dispatch.h"
-            name = name.strip().replace("/", "-")
             LINKS_MAP[f"../../{man_dir}/{name}"] = f"../{man_dir}/{man_file.name}.md"
             if name != man_file.name:
                 redirect_page_uri = f"{man_file.dest_dir}/{man_dir}/{name}"
@@ -68,21 +76,16 @@ def on_files(files: Files, config: MkDocsConfig) -> Files | None:
 def populate_index_content(source_md: str, page: Page, config: MkDocsConfig, files: Files) -> str:
     if page.file.src_uri not in MAN_INDEXES:
         return source_md
-    current_man_dir = page.parent.title.lower()
+    current_man_dir = Path(page.file.src_uri).parent.name
     rows = []
     for man_file in files.documentation_pages():
-        if man_file.src_uri in SKIP_FILES + MAN_INDEXES:
+        if man_file.src_uri not in MAN_PAGES:
             continue
-        man_dir = man_file.page.parent.title.lower()
+        man_dir, names, description = MAN_PAGES[man_file.src_uri]
         if man_dir != current_man_dir:
             continue
-        description = get_description(man_file.content_string)
-        names = get_names(man_file.content_string)
         for name in names:
-            # e.g. "openssl/core_dispatch.h" to "openssl-core_dispatch.h"
-            name = name.strip().replace("/", "-")
-            row = f"| [{name}]({man_file.name}.md) | {description} |"
-            rows.append(row)
+            rows.append(f"| [{name}]({man_file.name}.md) | {description} |")
     return source_md + "\n".join(sorted(rows))
 
 
@@ -116,17 +119,13 @@ def populate_nav(files: Files) -> dict[str, list[Link]]:
         "man7": [],
     }
     for man_file in files.documentation_pages():
-        if man_file.src_uri in SKIP_FILES + MAN_INDEXES:
+        if man_file.src_uri not in MAN_PAGES:
             continue
-        man_dir = man_file.page.parent.title.lower()
-        names = get_names(man_file.content_string)
+        man_dir, names, _ = MAN_PAGES[man_file.src_uri]
         for name in names:
-            # e.g. "openssl/core_dispatch.h" to "openssl-core_dispatch.h"
-            name = name.strip().replace("/", "-")
             if name == man_file.name:
                 continue
-            link = Link(title=name, url=f"{man_dir}/{man_file.name}")
-            navigation_children[man_dir].append(link)
+            navigation_children[man_dir].append(Link(title=name, url=f"{man_dir}/{man_file.name}"))
     return navigation_children
 
 
@@ -159,7 +158,10 @@ def on_post_page(output: str, page: Page, config: MkDocsConfig) -> str:
 
 
 def on_post_build(config: MkDocsConfig):
-    template = '<!DOCTYPE html><html lang="en"><head><meta name="robots" content="noindex"><meta charset="utf-8"><meta http-equiv="refresh" content="0; url={}"></head></html>'
+    template = (
+        '<!DOCTYPE html><html lang="en"><head><meta name="robots" content="noindex"><meta charset="utf-8">'
+        '<meta http-equiv="refresh" content="0; url={}"></head></html>'
+    )
     for redirect_page_uri, source_page_uri in REDIRECT_PAGES.items():
         path = Path(redirect_page_uri)
         try:
