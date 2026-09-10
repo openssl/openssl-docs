@@ -12,6 +12,8 @@ from mkdocs.structure.nav import Link
 from mkdocs.structure.nav import Navigation
 from mkdocs.structure.pages import Page
 
+from code_language import CodeLanguageExtension
+
 log = logging.getLogger("mkdocs.hooks")
 
 MAN_INDEXES = ["man1/index.md", "man3/index.md", "man5/index.md", "man7/index.md"]
@@ -51,6 +53,11 @@ def parse_name_section(content: str, src_uri: str) -> tuple[list[str], str]:
         log.warning(f"{src_uri}: NAME section has no ' - ' separator, description will be empty")
     names = [name.strip().replace("/", "-") for name in names_part.split(",")]
     return [name for name in names if name], description.strip()
+
+
+def on_config(config: MkDocsConfig) -> MkDocsConfig:
+    config.markdown_extensions.append(CodeLanguageExtension())
+    return config
 
 
 def on_pre_build(config: MkDocsConfig) -> None:
