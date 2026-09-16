@@ -3029,6 +3029,10 @@
          <lastmod>2026-09-16</lastmod>
     </url>
     <url>
+         <loc>https://docs.openssl.org/master/man7/EVP_CIPHER-ASCON-AEAD128/</loc>
+         <lastmod>2026-09-16</lastmod>
+    </url>
+    <url>
          <loc>https://docs.openssl.org/master/man7/EVP_CIPHER-BLOWFISH/</loc>
          <lastmod>2026-09-16</lastmod>
     </url>
