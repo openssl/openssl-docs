@@ -2961,6 +2961,10 @@
          <lastmod>2026-11-02</lastmod>
     </url>
     <url>
+         <loc>https://docs.openssl.org/master/man3/X509v3_addr_get_safi/</loc>
+         <lastmod>2026-11-02</lastmod>
+    </url>
+    <url>
          <loc>https://docs.openssl.org/master/man3/X509v3_get_ext_by_NID/</loc>
          <lastmod>2026-11-02</lastmod>
     </url>
