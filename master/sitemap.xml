@@ -1625,6 +1625,10 @@
          <lastmod>2026-11-24</lastmod>
     </url>
     <url>
+         <loc>https://docs.openssl.org/master/man3/OSSL_PARAM_names/</loc>
+         <lastmod>2026-11-24</lastmod>
+    </url>
+    <url>
          <loc>https://docs.openssl.org/master/man3/OSSL_PARAM_print_to_bio/</loc>
          <lastmod>2026-11-24</lastmod>
     </url>
